@@ -1,6 +1,7 @@
 *.pyc
 *.swp
-*.egg-info/
+afsutil.egg-info/
 dist/
 build/
+Makefile.config
 __version__.py
