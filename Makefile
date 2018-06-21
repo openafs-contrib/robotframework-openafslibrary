@@ -28,36 +28,36 @@ Makefile.config: configure.py
 
 include Makefile.config
 
-version: OpenAFSLibrary/__version__.py
+generated: OpenAFSLibrary/__version__.py
 
 OpenAFSLibrary/__version__.py:
 	echo "VERSION = '$(VERSION)'" >$@
 
-lint: version
+lint: generated
 	$(PYFLAKES) OpenAFSLibrary/*.py OpenAFSLibrary/keywords/*.py
 
-test: version
+test: generated
 	$(PYTHON) -m unittest -v test
 
-sdist: version
+sdist: generated
 	$(PYTHON) setup.py sdist
 
-wheel: version
+wheel: generated
 	$(PYTHON) setup.py bdist_wheel
 
-rpm: version
+rpm: generated
 	$(PYTHON) setup.py bdist_rpm
 
-deb: version
+deb: generated
 	$(PYTHON) setup.py --command-packages=stdeb.command bdist_deb
 
-install: version
+install: generated
 	$(MAKE) -f Makefile.$(INSTALL) $@
 
-install-user: version
+install-user: generated
 	$(MAKE) -f Makefile.$(INSTALL) $@
 
-install-dev: version
+install-dev: generated
 	$(MAKE) -f Makefile.$(INSTALL) $@
 
 uninstall:
