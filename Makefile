@@ -1,7 +1,5 @@
 # Copyright (c) 2018 Sine Nomine Associates
 
-include Makefile.config
-
 help:
 	@echo "usage: make <target> [<target> ...]"
 	@echo ""
@@ -24,6 +22,11 @@ help:
 	@echo "  test           run unit tests"
 	@echo "  clean          delete generated files"
 	@echo "  distclean      delete generated and config files"
+
+Makefile.config: configure.py
+	python configure.py > $@
+
+include Makefile.config
 
 version: OpenAFSLibrary/__version__.py
 
