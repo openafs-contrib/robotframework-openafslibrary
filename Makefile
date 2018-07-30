@@ -19,6 +19,7 @@ help:
 	@echo ""
 	@echo "Development targets:"
 	@echo "  lint           run python linter"
+	@echo "  checkdocs      validate documents"
 	@echo "  test           run unit tests"
 	@echo "  clean          delete generated files"
 	@echo "  distclean      delete generated and config files"
@@ -35,6 +36,9 @@ OpenAFSLibrary/__version__.py:
 
 lint: generated
 	$(PYFLAKES) OpenAFSLibrary/*.py OpenAFSLibrary/keywords/*.py
+
+checkdocs: # requires collection.checkdocs
+	$(PYTHON) setup.py checkdocs
 
 test: generated
 	$(PYTHON) -m unittest -v test
