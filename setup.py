@@ -6,9 +6,6 @@ except ImportError:
 NAME = 'robotframework_openafslibrary'
 exec(open('OpenAFSLibrary/__version__.py').read()) # get VERSION
 
-with open('requirements.txt') as f:
-    requirements = f.read().splitlines()
-
 setup(
     name=NAME,
     version=VERSION,
@@ -22,7 +19,9 @@ setup(
         'OpenAFSLibrary',
         'OpenAFSLibrary.keywords',
     ],
-    install_requires=requirements,
+    install_requires=[
+        'robotframework>=2.7.0',
+    ],
     zip_safe=False,
     classifiers=[
         'Development Status :: 4 - Beta',
