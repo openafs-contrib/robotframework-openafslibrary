@@ -1,4 +1,4 @@
-# Copyright (c) 2014-2015 Sine Nomine Associates
+# Copyright (c) 2014-2018 Sine Nomine Associates
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -20,38 +20,71 @@
 #
 
 import os
-import math
+import random
 from robot.api import logger
 
 class _PathKeywords(object):
 
-    def create_files(self, path, count, size=0):
-        """Create count number fixed size files in the given path.
+    def create_files(self, path, count=1, size=0, depth=0, width=0, fill='zero'):
+        """Create a directory tree of test files.
 
-        Fails if the files are already present.
+        path: destination path
+        count: number of files to create in each directory
+        size: size of each file
+        depth: sub-directory depth
+        width: number of sub-directories in each directory
+        fill: test files data pattern
+               'zero'   - fill with zero bits
+               'one'    - fill with one bits
+               'random' - fill with pseudo random bits
+               'fixed'  - fill with repetitions of fixed bits
         """
+        BLOCKSIZE = 8192
         count = int(count)
         size = int(size)
-        if count <= 0:
-            return
-        fmt = "%%0%dd" % (int(math.log10(float(count))) + 1) # fixed width filenames
-        if size > 0:
-            block = '\0' * 8192
-            blocks = size // len(block)
-            partial = size % len(block)
-            if partial > 0:
-                pblock = '\0' * partial
-        for i in xrange(0, count):
-            num = os.path.join(path, fmt % (i))
-            fd = os.open(num, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0777)
-            if size > 0:
-                for j in xrange(0, blocks):
-                    if os.write(fd, block) != len(block):
-                        raise IOError("Failed to write block %d to file '%s'." % (j,num))
-                if partial:
-                    if os.write(fd, pblock) != len(pblock):
-                        raise IOError("Failed to write to file '%s'." % num)
-            os.close(fd)
+        depth = int(depth)
+        width = int(width)
+
+        if fill == 'zero':
+            block = bytearray(BLOCKSIZE)
+        elif fill == 'one':
+            block = bytearray(BLOCKSIZE)
+        elif fill == 'random':
+            random.seed(0) # Always make the same psuedo random sequence.
+            block = bytearray(random.getrandbits(8) for _ in xrange(BLOCKSIZE))
+        elif fill == 'fixed':
+            hexstring = 'deadbeef'
+            ncopies = BLOCKSIZE // len(hexstring)
+            block = bytearray.fromhex(hexstring * ncopies)
+        else:
+            raise ValueError("Invalid fill type: %s" % fill)
+
+        nblocks = size // BLOCKSIZE
+        partial_size = size % BLOCKSIZE
+        if partial_size:
+            partial_block = block[0:partial_size]
+
+        def make_files(p, count):
+            for i in xrange(0, count):
+                name = os.path.join(p, '%d' % (i))
+                with open(name, 'wb') as f:
+                    for _ in xrange(0, nblocks):
+                        f.write(block)
+                    if partial_size:
+                        f.write(partial_block)
+
+        def make_tree(p, d):
+            if d > depth:
+                return
+            if not os.path.isdir(p):
+                os.mkdir(p)
+            if count:
+		make_files(p, count)
+            for i in xrange(0, width):
+                make_tree('%s/d%d' % (p, i), d + 1)
+
+        make_tree(path, 0)
+
 
     def directory_entry_should_exist(self, path):
         """Fails if directory entry does not exist in the given path."""
