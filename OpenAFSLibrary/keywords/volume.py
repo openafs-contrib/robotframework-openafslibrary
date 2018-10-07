@@ -167,10 +167,8 @@ class _VolumeKeywords(object):
             logger.info("Skipping remove for volume id 0")
             return
         volume = None
-        if path:
+        if path and os.path.exists(path):
             path = os.path.abspath(path)
-            if not os.path.exists(path):
-                raise AssertionError("Path not found: %s" % (path))
             if not path.startswith('/afs'):
                 raise AssertionError("Path not in '/afs': %s" % (path))
             if flush:
