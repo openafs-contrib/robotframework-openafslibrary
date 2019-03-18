@@ -84,6 +84,6 @@ clean:
 	rm -f MANIFEST
 
 distclean: clean
-	rm -f OpenAFSLibary/__version__.py
+	rm -f OpenAFSLibrary/__version__.py
 	rm -f Makefile.config
 	rm -f files.txt
