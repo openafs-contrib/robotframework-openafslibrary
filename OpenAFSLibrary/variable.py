@@ -20,8 +20,15 @@
 #
 
 from robot.libraries.BuiltIn import BuiltIn,RobotNotRunningError
+import sys
 
 _rf = BuiltIn()
+
+_PY3 = sys.version_info[0] == 3
+if _PY3:
+    _string_type = str
+else:
+    _string_type = basestring
 
 class VariableMissing(Exception):
     pass
@@ -46,7 +53,15 @@ def get_var(name):
 def get_bool(name):
     """Return the variable value as a bool."""
     value = get_var(name)
-    return value.lower() in ("yes", "y", "true", "t", "1")
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, int):
+        return value != 0
+    if isinstance(value, _string_type):
+        return value.lower() in ("yes", "y", "true", "t", "1")
+    if value:
+        return True
+    return False
 
 def _split_into_list(name):
     # Split the given scalar into a list. This can be useful since lists can be
