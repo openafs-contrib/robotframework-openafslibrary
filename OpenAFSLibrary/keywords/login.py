@@ -44,6 +44,20 @@ def akimpersonate(user):
     if rc:
         raise AssertionError("aklog failed: '%s'; exit code = %d" % (cmd, rc))
 
+def login_with_password(user, password):
+    """Acquire a Kerberos ticket and AFS token with a password."""
+    if not user:
+        raise AssertionError("user is required")
+    if not password:
+        raise AssertionError("password is required")
+    klog_krb5 = get_var('KLOG_KRB5')
+    cell = get_var('AFS_CELL')
+    realm = get_var('KRB_REALM')
+    cmd = "%s -principal %s -password %s -cell %s -k %s" % (klog_krb5, user, password, cell, realm)
+    rc,out,err = run_program(cmd)
+    if rc:
+        raise AssertionError("klog.krb5 failed: '%s'; exit code = %d" % (cmd, rc))
+
 def login_with_keytab(user):
     """Acquire an AFS token for authenticated access with Kerberos."""
     if not user:
@@ -76,11 +90,13 @@ def login_with_keytab(user):
 
 class _LoginKeywords(object):
 
-    def login(self, user=None):
+    def login(self, user=None, password=None):
         """Acquire an AFS token for authenticated access."""
         if user is None:
             user = get_var('AFS_ADMIN')
-        if get_bool('AFS_AKIMPERSONATE'):
+        if user and password:
+            login_with_password(user, password)
+        elif get_bool('AFS_AKIMPERSONATE'):
             akimpersonate(user)
         else:
             login_with_keytab(user)
