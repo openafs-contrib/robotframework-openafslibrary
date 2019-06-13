@@ -19,10 +19,10 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
-import types
 import subprocess
 from robot.api import logger
 from OpenAFSLibrary.variable import get_var
+from OpenAFSLibrary.six import string_types
 
 class CommandFailed(Exception):
     def __init__(self, name, args, err):
@@ -39,7 +39,7 @@ class NoSuchEntryError(CommandFailed):
         CommandFailed.__init__(self, "vos", args, "no such volume in the vldb")
 
 def run_program(args):
-    if isinstance(args, types.StringTypes):
+    if isinstance(args, string_types):
         cmd_line = args
         shell = True
     else:
