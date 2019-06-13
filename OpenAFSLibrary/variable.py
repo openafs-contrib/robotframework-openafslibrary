@@ -20,15 +20,9 @@
 #
 
 from robot.libraries.BuiltIn import BuiltIn,RobotNotRunningError
-import sys
+from OpenAFSLibrary.six import string_types
 
 _rf = BuiltIn()
-
-_PY3 = sys.version_info[0] == 3
-if _PY3:
-    _string_type = str
-else:
-    _string_type = basestring
 
 class VariableMissing(Exception):
     pass
@@ -57,7 +51,7 @@ def get_bool(name):
         return value
     if isinstance(value, int):
         return value != 0
-    if isinstance(value, _string_type):
+    if isinstance(value, string_types):
         return value.lower() in ("yes", "y", "true", "t", "1")
     if value:
         return True

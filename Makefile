@@ -35,8 +35,23 @@ generated: OpenAFSLibrary/__version__.py
 OpenAFSLibrary/__version__.py:
 	echo "VERSION = '$(VERSION)'" >$@
 
+source = \
+  OpenAFSLibrary/command.py  \
+  OpenAFSLibrary/__init__.py \
+  OpenAFSLibrary/variable.py \
+  OpenAFSLibrary/keywords/acl.py \
+  OpenAFSLibrary/keywords/cache.py \
+  OpenAFSLibrary/keywords/command.py \
+  OpenAFSLibrary/keywords/dump.py \
+  OpenAFSLibrary/keywords/__init__.py \
+  OpenAFSLibrary/keywords/login.py \
+  OpenAFSLibrary/keywords/pag.py \
+  OpenAFSLibrary/keywords/path.py \
+  OpenAFSLibrary/keywords/rx.py \
+  OpenAFSLibrary/keywords/volume.py
+
 lint: generated
-	$(PYFLAKES) OpenAFSLibrary/*.py OpenAFSLibrary/keywords/*.py
+	$(PYFLAKES) $(source)
 
 checkdocs: # requires collection.checkdocs
 	$(PYTHON) setup.py checkdocs
