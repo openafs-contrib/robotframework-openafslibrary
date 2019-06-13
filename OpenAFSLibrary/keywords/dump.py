@@ -36,7 +36,7 @@ class VolumeDump(object):
     @staticmethod
     def check_header(filename):
         """Verify filename is a dump file."""
-        file = open(filename, "r")
+        file = open(filename, "rb")
         size = struct.calcsize("!BLL")
         packed = file.read(size)
         file.close()
@@ -52,7 +52,7 @@ class VolumeDump(object):
 
     def __init__(self, filename):
         """Create a new volume dump file."""
-        self.file = open(filename, "w")
+        self.file = open(filename, "wb")
         self.write(self.D_DUMPHEADER, "LL", self.DUMPBEGINMAGIC, self.DUMPVERSION)
 
     def write(self, tag, fmt, *args):
