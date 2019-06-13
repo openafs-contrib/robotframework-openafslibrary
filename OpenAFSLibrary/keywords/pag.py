@@ -23,6 +23,7 @@ import os
 import subprocess
 from robot.api import logger
 from OpenAFSLibrary.variable import get_var, get_bool
+from OpenAFSLibrary.six import PY2
 
 PAG_MIN = 0x41000000
 PAG_MAX = 0x41ffffff
@@ -116,19 +117,24 @@ class _PagKeywords(object):
         """Run a command in the pagsh and returns the output."""
         PAGSH = get_var('PAGSH')
         logger.info("running %s" % (PAGSH,))
+        logger.debug("script=%s" % (script,))
+        if not PY2:
+            script = script.encode('ascii')
         pagsh = subprocess.Popen(PAGSH, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         (output, error) = pagsh.communicate(input=script)
         code = pagsh.wait()
         if code == 0:
-            logger.debug("stdin=%s" % (script))
+            logger.debug("stdin=%s" % (script,))
             logger.debug("code=%d" % (code,))
             logger.debug("stdout=%s" % (output,))
             logger.debug("stderr=%s" % (error,))
         else:
-            logger.info("stdin=%s" % (script))
+            logger.info("stdin=%s" % (script,))
             logger.info("code=%d" % (code,))
             logger.info("stdout=%s" % (output,))
             logger.info("stderr=%s" % (error,))
             raise AssertionError("Failed to run pagsh!")
+        if not PY2:
+            output = output.decode('ascii')
         return output
 
