@@ -21,6 +21,7 @@
 
 import os
 import random
+from OpenAFSLibrary.six.moves import range
 from robot.api import logger
 
 class _PathKeywords(object):
@@ -51,7 +52,7 @@ class _PathKeywords(object):
             block = bytearray(BLOCKSIZE)
         elif fill == 'random':
             random.seed(0) # Always make the same psuedo random sequence.
-            block = bytearray(random.getrandbits(8) for _ in xrange(BLOCKSIZE))
+            block = bytearray(random.getrandbits(8) for _ in range(BLOCKSIZE))
         elif fill == 'fixed':
             hexstring = 'deadbeef'
             ncopies = BLOCKSIZE // len(hexstring)
@@ -65,10 +66,10 @@ class _PathKeywords(object):
             partial_block = block[0:partial_size]
 
         def make_files(p, count):
-            for i in xrange(0, count):
+            for i in range(0, count):
                 name = os.path.join(p, '%d' % (i))
                 with open(name, 'wb') as f:
-                    for _ in xrange(0, nblocks):
+                    for _ in range(0, nblocks):
                         f.write(block)
                     if partial_size:
                         f.write(partial_block)
@@ -80,7 +81,7 @@ class _PathKeywords(object):
                 os.mkdir(p)
             if count:
                 make_files(p, count)
-            for i in xrange(0, width):
+            for i in range(0, width):
                 make_tree('%s/d%d' % (p, i), d + 1)
 
         make_tree(path, 0)
