@@ -26,6 +26,9 @@ from OpenAFSLibrary.command import fs
 
 _RIGHTS = list("rlidwkaABCDEFGH")
 
+def cmp(a, b):
+    return (a > b) - (a < b)
+
 def normalize(rights):
     """Normalize a list of ACL right characters.
 
