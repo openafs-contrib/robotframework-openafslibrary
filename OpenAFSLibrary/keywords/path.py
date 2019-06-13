@@ -79,7 +79,7 @@ class _PathKeywords(object):
             if not os.path.isdir(p):
                 os.mkdir(p)
             if count:
-		make_files(p, count)
+                make_files(p, count)
             for i in xrange(0, width):
                 make_tree('%s/d%d' % (p, i), d + 1)
 
