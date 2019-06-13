@@ -22,7 +22,7 @@
 import subprocess
 from robot.api import logger
 from OpenAFSLibrary.variable import get_var
-from OpenAFSLibrary.six import string_types
+from OpenAFSLibrary.six import string_types, PY2
 
 class CommandFailed(Exception):
     def __init__(self, name, args, err):
@@ -48,10 +48,16 @@ def run_program(args):
         shell = False
     logger.info("running: %s" % cmd_line)
     proc = subprocess.Popen(args, shell=shell, bufsize=-1, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    output, error = proc.communicate()
+    stdout,stderr = proc.communicate()
     if proc.returncode:
-        logger.info("output: " + output)
-        logger.info("error:  " + error)
+        logger.info("output: %s" % (stdout,))
+        logger.info("error: %s" % (stderr,))
+    if PY2:
+        output = stdout
+        error = stderr
+    else:
+        output = stdout.decode('utf-8')
+        error = stderr.decode('utf-8')
     return (proc.returncode, output, error)
 
 def rxdebug(*args):
@@ -82,5 +88,3 @@ def fs(*args):
     if rc != 0:
         raise CommandFailed('fs', args, err)
     return out
-
-
