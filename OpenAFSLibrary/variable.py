@@ -64,8 +64,9 @@ def _split_into_list(name):
     # scalars.
     try:
         value = get_var(name)
-        values = [v.strip() for v in value.split(',')]
-        _rf.set_global_variable('@{%s}' % name, *values)
+        if isinstance(value, string_types):
+            values = [v.strip() for v in value.split(',')]
+            _rf.set_global_variable('@{%s}' % name, *values)
     except VariableMissing:
         pass
     except VariableEmpty:
