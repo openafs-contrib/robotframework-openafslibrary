@@ -23,6 +23,22 @@ import os
 import random
 from OpenAFSLibrary.six.moves import range
 from robot.api import logger
+import errno
+
+def _convert_errno_parm(code_should_be):
+    """ Convert the code_should_be value to an integer
+    If code_should_be isn't an integer, then try to use
+    the code_should_be value as a errno "name" and extract
+    the errno value from the errno module.
+    """
+    try:
+        code = int(code_should_be)
+    except ValueError:
+        try:
+            code = getattr(errno, code_should_be)
+        except AttributeError:
+            raise AssertionError("code_should_be '%s' is not a valid errno name" % code_should_be)
+    return code
 
 class _PathKeywords(object):
 
@@ -145,7 +161,7 @@ class _PathKeywords(object):
             logger.info("os.link(): %s" % e)
             code = e.errno
         logger.info("os.link()=%d" % code)
-        if code != int(code_should_be):
+        if code != _convert_errno_parm(code_should_be):
             raise AssertionError("link returned an unexpected code: %d" % code)
 
     def symlink(self, src, dst, code_should_be=0):
@@ -157,7 +173,7 @@ class _PathKeywords(object):
             logger.info("os.symlink(): %s" % e)
             code = e.errno
         logger.info("os.symlink()=%d" % code)
-        if code != int(code_should_be):
+        if code != _convert_errno_parm(code_should_be):
             raise AssertionError("symlink returned an unexpected code: %d" % code)
 
     def unlink(self, path, code_should_be=0):
@@ -169,7 +185,7 @@ class _PathKeywords(object):
             logger.info("os.unlink(): %s" % e)
             code = e.errno
         logger.info("os.unlink()=%d" % code)
-        if code != int(code_should_be):
+        if code != _convert_errno_parm(code_should_be):
             raise AssertionError("unlink returned an unexpected code: %d" % code)
 
     def link_count_should_be(self, path, count):
