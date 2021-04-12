@@ -1,6 +1,7 @@
 *.pyc
 *.swp
 *.egg-info/
+.venv/
 dist/
 build/
 Makefile.config
