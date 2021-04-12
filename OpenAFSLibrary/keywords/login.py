@@ -58,23 +58,17 @@ def login_with_password(user, password):
     if rc:
         raise AssertionError("klog.krb5 failed: '%s'; exit code = %d" % (cmd, rc))
 
-def login_with_keytab(user):
+def login_with_keytab(user, keytab):
     """Acquire an AFS token for authenticated access with Kerberos."""
     if not user:
-        raise AssertionError("User name is required")
+        raise ValueError("User name is required.")
+    if not keytab:
+        raise ValueError("keytab is required.")
     kinit = get_var('KINIT')
     aklog = get_var('AKLOG')
     cell = get_var('AFS_CELL')
     realm = get_var('KRB_REALM')
     principal = get_principal(user, realm)
-    if user == get_var('AFS_USER'):
-        keytab = get_var('KRB_USER_KEYTAB')
-    elif user == get_var('AFS_ADMIN'):
-        keytab = get_var('KRB_ADMIN_KEYTAB')
-    else:
-        raise AssertionError("No keytab found for user '%s'." % user)
-    if not keytab:
-        raise AssertionError("Keytab not set for user '%s'." % user)
     logger.info("keytab: " + keytab)
     if not os.path.exists(keytab):
         raise AssertionError("Keytab file '%s' is missing." % keytab)
@@ -90,16 +84,16 @@ def login_with_keytab(user):
 
 class _LoginKeywords(object):
 
-    def login(self, user=None, password=None):
+    def login(self, user, password=None, keytab=None):
         """Acquire an AFS token for authenticated access."""
-        if user is None:
-            user = get_var('AFS_ADMIN')
-        if user and password:
-            login_with_password(user, password)
-        elif get_bool('AFS_AKIMPERSONATE'):
+        if get_bool('AFS_AKIMPERSONATE'):
             akimpersonate(user)
+        elif password:
+            login_with_password(user, password)
+        elif keytab:
+            login_with_keytab(user, keytab)
         else:
-            login_with_keytab(user)
+            raise ValueError("password or keytab is required")
 
     def logout(self):
         """Release the AFS token."""
@@ -114,4 +108,3 @@ class _LoginKeywords(object):
         rc,out,err = run_program(unlog)
         if rc:
             raise AssertionError("unlog failed: '%s'; exit code = %d" % (unlog, rc))
-
