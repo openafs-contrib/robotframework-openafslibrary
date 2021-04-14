@@ -44,7 +44,7 @@ class OpenAFSLibrary(
     _CacheKeywords,
     _DumpKeywords,
     ):
-    """Robot Framework test library for OpenAFS (preliminary).
+    """OpenAFS Robot Framework test library
 
     `OpenAFSLibrary` provides keywords for basic OpenAFS testing. It
     includes keywords to install OpenAFS client and servers and
@@ -56,8 +56,8 @@ class OpenAFSLibrary(
 
     The following settings specify the test cell and user names:
     | AFS_CELL          | Test cell name |
-    | AFS_ADMIN         | Test cell admin username |
-    | AFS_USER          | Test cell username |
+    | KRB_REALM         | Authentication realm |
+    | KRB_AFS_KEYTAB    | Authenication keytab for akimpersonate mode |
 
     === Command paths ===
 

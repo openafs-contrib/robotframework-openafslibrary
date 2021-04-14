@@ -7,3 +7,4 @@ build/
 Makefile.config
 __version__.py
 files.txt
+docs/build

@@ -21,6 +21,7 @@ help:
 	@echo "Development targets:"
 	@echo "  lint           run python linter"
 	@echo "  checkdocs      validate documents"
+	@echo "  docs           generate documents"
 	@echo "  test           run unit tests"
 	@echo "  clean          delete generated files"
 	@echo "  distclean      delete generated and config files"
@@ -55,6 +56,10 @@ lint: generated
 
 checkdocs: # requires collection.checkdocs
 	$(PYTHON) setup.py checkdocs
+
+.PHONY: doc docs
+doc docs:
+	$(MAKE) -C docs librst html
 
 test: generated
 	$(PYTHON) -m unittest -v test
