@@ -201,15 +201,21 @@ class _VolumeKeywords(object):
                         logger.info("No volume {name_or_id} to zap on server {server} part {part}".format(**locals()))
 
     def mount_volume(self, path, vol, *options):
-        """Mount an AFS volume."""
+        """
+        Mount a volume on a path.
+        """
         fs('mkmount', '-dir', path, '-vol', vol, *options)
 
     def release_volume(self, name):
+        """
+        Release the volume.
+        """
         vos('release', '-id', name, '-verbose')
         fs("checkvolumes")
 
     def volume_should_exist(self, name_or_id):
-        """Verify the existence of a read-write volume.
+        """
+        Verify the existence of a read-write volume.
 
         Fails if the volume entry is not found in the VLDB or the volume is
         not present on the fileserver indicated by the VLDB.
@@ -225,6 +231,9 @@ class _VolumeKeywords(object):
                              (volume['rw'], volume['server'], volume['part']))
 
     def volume_should_not_exist(self, name_or_id):
+        """
+        Fails if volume exists.
+        """
         try:
             volume = get_volume_entry(name_or_id)
         except:
@@ -233,6 +242,9 @@ class _VolumeKeywords(object):
             raise AssertionError("Volume entry found in vldb for %s" % (name_or_id))
 
     def volume_location_matches(self, name_or_id, server, part, vtype='rw'):
+        """
+        Fails if volume is not located on the given server and partition.
+        """
         address = socket.gethostbyname(server)
         if vtype not in ('rw', 'ro', 'bk'):
             raise AssertionError("Volume type must be one of 'rw', 'ro', or 'bk'.")
@@ -261,17 +273,24 @@ class _VolumeKeywords(object):
                              (volume['rw'], volume['server'], volume['part']))
 
     def volume_should_be_locked(self, name):
-        """Verify the volume is locked."""
+        """
+        Fails if the volume is not locked.
+        """
         volume = get_volume_entry(name)
         if not volume['locked']:
             raise AssertionError("Volume '%s' is not locked." % (name))
 
     def volume_should_be_unlocked(self, name):
-        """Verify the volume is unlocked."""
+        """
+        Fails if the volume is locked.
+        """
         volume = get_volume_entry(name)
         if volume['locked']:
             raise AssertionError("Volume '%s' is locked." % (name))
 
     def get_volume_id(self, name):
+        """
+        Lookup the volume numeric id.
+        """
         volume = get_volume_entry(name)
         return volume['rw']

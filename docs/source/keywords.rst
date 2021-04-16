@@ -125,7 +125,7 @@ Fails if command does not exit with a zero status code.
 
 Create Dump
 -----------
-
+Generate a volume dump file.
 
 .. list-table:: Arguments
    :header-rows: 1
@@ -272,7 +272,7 @@ Request the software version number.
 
 Get Volume Id
 -------------
-
+Lookup the volume numeric id.
 
 .. list-table:: Arguments
    :header-rows: 1
@@ -364,7 +364,7 @@ Release the AFS token.
 
 Mount Volume
 ------------
-Mount an AFS volume.
+Mount a volume on a path.
 
 .. list-table:: Arguments
    :header-rows: 1
@@ -434,7 +434,7 @@ Fails if a PAG is set.
 
 Release Volume
 --------------
-
+Release the volume.
 
 .. list-table:: Arguments
    :header-rows: 1
@@ -598,7 +598,7 @@ Unlink the directory entry.
 
 Volume Location Matches
 -----------------------
-
+Fails if volume is not located on the given server and partition.
 
 .. list-table:: Arguments
    :header-rows: 1
@@ -621,7 +621,7 @@ Volume Location Matches
 
 Volume Should Be Locked
 -----------------------
-Verify the volume is locked.
+Fails if the volume is not locked.
 
 .. list-table:: Arguments
    :header-rows: 1
@@ -635,7 +635,7 @@ Verify the volume is locked.
 
 Volume Should Be Unlocked
 -------------------------
-Verify the volume is unlocked.
+Fails if the volume is locked.
 
 .. list-table:: Arguments
    :header-rows: 1
@@ -663,7 +663,7 @@ Verify the existence of a read-write volume.
 
 Volume Should Not Exist
 -----------------------
-
+Fails if volume exists.
 
 .. list-table:: Arguments
    :header-rows: 1

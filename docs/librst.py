@@ -31,6 +31,10 @@ def write_keyword(f, keyword):
     """
     Write the keyword documentation.
     """
+    if not keyword['shortdoc']:
+        raise AssertionError(
+            'Missing shortdoc for keyword "%s" in file "%s".' %
+            (keyword['name'], keyword['source']))
     f.write('%s\n%s\n' % (keyword['name'], '-' * len(keyword['name'])))
     f.write('%s\n\n' % keyword['shortdoc'])
     if keyword['args']:

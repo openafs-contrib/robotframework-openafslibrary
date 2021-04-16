@@ -96,6 +96,9 @@ class _DumpKeywords(object):
         VolumeDump.check_header(filename)
 
     def create_dump(self, filename, size='small', contains=''):
+        """
+        Generate a volume dump file.
+        """
         if contains == 'bogus-acl':
             self._create_dump_with_bogus_acl(filename)
         elif size == 'empty':
