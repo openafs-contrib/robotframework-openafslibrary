@@ -12,7 +12,8 @@ def write_arguments(f, args):
     """
     Write the argument table for a keyword.
     """
-    f.write('.. list-table:: Arguments\n')
+    f.write('**Arguments**\n\n')
+    f.write('.. list-table::\n')
     f.write('   :header-rows: 1\n')
     f.write('\n')
     f.write('   * - Name\n')
@@ -31,14 +32,15 @@ def write_keyword(f, keyword):
     """
     Write the keyword documentation.
     """
-    if not keyword['shortdoc']:
+    if not keyword['doc']:
         raise AssertionError(
-            'Missing shortdoc for keyword "%s" in file "%s".' %
+            'Missing doc for keyword "%s" in file "%s".' %
             (keyword['name'], keyword['source']))
-    f.write('%s\n%s\n' % (keyword['name'], '-' * len(keyword['name'])))
-    f.write('%s\n\n' % keyword['shortdoc'])
+    f.write('%s\n%s\n\n' % (keyword['name'], '-' * len(keyword['name'])))
     if keyword['args']:
         write_arguments(f, keyword['args'])
+    f.write('**Documentation**\n\n')
+    f.write('%s\n\n' % keyword['doc'])
 
 
 def main():
@@ -50,6 +52,7 @@ def main():
         '../OpenAFSLibrary/',
         'build/libdoc.json',
         format='json',
+        docformat='html',
         quiet=True)
 
     # Load our intermediate json file.
@@ -60,6 +63,7 @@ def main():
     with open('source/keywords.rst', 'w') as f:
         f.write('Keywords\n')
         f.write('========\n\n')
+        f.write('Version: %s\n\n' % (libspec['version']))
         for keyword in libspec['keywords']:
             write_keyword(f, keyword)
 

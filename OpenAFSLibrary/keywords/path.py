@@ -43,18 +43,28 @@ def _convert_errno_parm(code_should_be):
 class _PathKeywords(object):
 
     def create_files(self, path, count=1, size=0, depth=0, width=0, fill='zero'):
-        """Create a directory tree of test files.
+        """
+        Create a directory tree of test files.
 
-        path: destination path
-        count: number of files to create in each directory
-        size: size of each file
-        depth: sub-directory depth
-        width: number of sub-directories in each directory
-        fill: test files data pattern
-               'zero'   - fill with zero bits
-               'one'    - fill with one bits
-               'random' - fill with pseudo random bits
-               'fixed'  - fill with repetitions of fixed bits
+        path
+          destination path
+        count
+          number of files to create in each directory
+        size
+          size of each file
+        depth
+          sub-directory depth
+        width
+          number of sub-directories in each directory
+        fill
+          test files data pattern
+
+        Valid fill values:
+
+        * zero - fill with zero bits
+        * one  - fill with one bits
+        * random - fill with pseudo random bits
+        * fixed  - fill with repetitions of fixed bits
         """
         BLOCKSIZE = 8192
         count = int(count)
@@ -189,7 +199,7 @@ class _PathKeywords(object):
             raise AssertionError("unlink returned an unexpected code: %d" % code)
 
     def link_count_should_be(self, path, count):
-        """Fails if the inode link count is not `count`."""
+        """Fails if the path has an unexpected inode link count."""
         count = int(count)
         if not path:
             raise AssertionError("Empty argument!")
@@ -197,7 +207,7 @@ class _PathKeywords(object):
             raise AssertionError("%s does not have %d links" % (path,count))
 
     def inode_should_be_equal(self, a, b):
-        """Fails if path `a` is a different inode than `b`."""
+        """Fails if paths have different inodes."""
         if not a or not b:
             raise AssertionError("Empty argument!")
         if os.stat(a).st_ino != os.stat(b).st_ino:

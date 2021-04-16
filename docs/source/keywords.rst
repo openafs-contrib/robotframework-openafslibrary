@@ -1,11 +1,14 @@
 Keywords
 ========
 
+Version: 0.7.2
+
 Access Control List Contains
 ----------------------------
-Fails if an ACL does not contain the given rights.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -21,11 +24,16 @@ Fails if an ACL does not contain the given rights.
      - required
      - 
 
+**Documentation**
+
+Fails if an ACL does not contain the given rights.
+
 Access Control List Matches
 ---------------------------
-Fails if an ACL does not match the given ACL.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -38,11 +46,16 @@ Fails if an ACL does not match the given ACL.
      - 
      - 
 
+**Documentation**
+
+Fails if an ACL does not match the given ACL.
+
 Access Control Should Exist
 ---------------------------
-Fails if the access control does not exist for the the given user or group name.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -54,12 +67,17 @@ Fails if the access control does not exist for the the given user or group name.
    * - name
      - required
      - 
+
+**Documentation**
+
+Fails if the access control does not exist for the the given user or group name.
 
 Access Control Should Not Exist
 -------------------------------
-Fails if the access control exists for the the given user or group name.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -72,11 +90,16 @@ Fails if the access control exists for the the given user or group name.
      - required
      - 
 
+**Documentation**
+
+Fails if the access control exists for the the given user or group name.
+
 Add Access Rights
 -----------------
-Add access rights to a path.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -92,11 +115,16 @@ Add access rights to a path.
      - required
      - 
 
+**Documentation**
+
+Add access rights to a path.
+
 Command Should Fail
 -------------------
-Fails if command exits with a zero status code.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -106,11 +134,16 @@ Fails if command exits with a zero status code.
      - required
      - 
 
+**Documentation**
+
+Fails if command exits with a zero status code.
+
 Command Should Succeed
 ----------------------
-Fails if command does not exit with a zero status code.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -123,11 +156,16 @@ Fails if command does not exit with a zero status code.
      - 
      - None
 
+**Documentation**
+
+Fails if command does not exit with a zero status code.
+
 Create Dump
 -----------
-Generate a volume dump file.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -143,11 +181,16 @@ Generate a volume dump file.
      - 
      - 
 
+**Documentation**
+
+Generate a volume dump file.
+
 Create Files
 ------------
-Create a directory tree of test files.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -172,11 +215,36 @@ Create a directory tree of test files.
      - 
      - zero
 
+**Documentation**
+
+Create a directory tree of test files.
+
+path
+  destination path
+count
+  number of files to create in each directory
+size
+  size of each file
+depth
+  sub-directory depth
+width
+  number of sub-directories in each directory
+fill
+  test files data pattern
+
+Valid fill values:
+
+* zero - fill with zero bits
+* one  - fill with one bits
+* random - fill with pseudo random bits
+* fixed  - fill with repetitions of fixed bits
+
 Create Volume
 -------------
-Create and mount a volume.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -207,11 +275,20 @@ Create and mount a volume.
      - 
      - False
 
+**Documentation**
+
+Create and mount a volume.
+
+Create a volume and optionally mount the volume. Also optionally create
+a read-only clone of the volume and release the new new volume. Release the
+parent volume if it is replicated.
+
 Directory Entry Should Exist
 ----------------------------
-Fails if directory entry does not exist in the given path.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -220,12 +297,17 @@ Fails if directory entry does not exist in the given path.
    * - path
      - required
      - 
+
+**Documentation**
+
+Fails if directory entry does not exist in the given path.
 
 File Should Be Executable
 -------------------------
-Fails if path is not an executable file for the current user.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -234,16 +316,26 @@ Fails if path is not an executable file for the current user.
    * - path
      - required
      - 
+
+**Documentation**
+
+Fails if path is not an executable file for the current user.
 
 Get Cache Size
 --------------
+
+**Documentation**
+
 Get the cache size.
+
+Outputs AFS cache size as the number of 1K blocks.
 
 Get Inode
 ---------
-Returns the inode number of a path.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -253,11 +345,16 @@ Returns the inode number of a path.
      - required
      - 
 
+**Documentation**
+
+Returns the inode number of a path.
+
 Get Version
 -----------
-Request the software version number.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -270,11 +367,16 @@ Request the software version number.
      - required
      - 
 
+**Documentation**
+
+Request the software version number.
+
 Get Volume Id
 -------------
-Lookup the volume numeric id.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -284,11 +386,16 @@ Lookup the volume numeric id.
      - required
      - 
 
+**Documentation**
+
+Lookup the volume numeric id.
+
 Inode Should Be Equal
 ---------------------
-Fails if path `a` is a different inode than `b`.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -301,11 +408,16 @@ Fails if path `a` is a different inode than `b`.
      - required
      - 
 
+**Documentation**
+
+Fails if paths have different inodes.
+
 Link
 ----
-Create a hard link.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -321,11 +433,16 @@ Create a hard link.
      - 
      - 0
 
+**Documentation**
+
+Create a hard link.
+
 Link Count Should Be
 --------------------
-Fails if the inode link count is not `count`.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -338,11 +455,16 @@ Fails if the inode link count is not `count`.
      - required
      - 
 
+**Documentation**
+
+Fails if the path has an unexpected inode link count.
+
 Login
 -----
-Acquire an AFS token for authenticated access.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -358,15 +480,23 @@ Acquire an AFS token for authenticated access.
      - 
      - None
 
+**Documentation**
+
+Acquire an AFS token for authenticated access.
+
 Logout
 ------
+
+**Documentation**
+
 Release the AFS token.
 
 Mount Volume
 ------------
-Mount a volume on a path.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -382,11 +512,16 @@ Mount a volume on a path.
      - 
      - 
 
+**Documentation**
+
+Mount a volume on a path.
+
 Pag From Groups
 ---------------
-Return the PAG from the given group id list.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -396,11 +531,16 @@ Return the PAG from the given group id list.
      - 
      - None
 
+**Documentation**
+
+Return the PAG from the given group id list.
+
 Pag Shell
 ---------
-Run a command in the pagsh and returns the output.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -410,11 +550,16 @@ Run a command in the pagsh and returns the output.
      - required
      - 
 
+**Documentation**
+
+Run a command in the pagsh and returns the output.
+
 Pag Should Be Valid
 -------------------
-Fails if the given PAG number is out of range.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -424,19 +569,30 @@ Fails if the given PAG number is out of range.
      - required
      - 
 
+**Documentation**
+
+Fails if the given PAG number is out of range.
+
 Pag Should Exist
 ----------------
+
+**Documentation**
+
 Fails if a PAG is not set.
 
 Pag Should Not Exist
 --------------------
+
+**Documentation**
+
 Fails if a PAG is set.
 
 Release Volume
 --------------
-Release the volume.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -446,11 +602,16 @@ Release the volume.
      - required
      - 
 
+**Documentation**
+
+Release the volume.
+
 Remove Volume
 -------------
-Remove a volume.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -475,11 +636,18 @@ Remove a volume.
      - 
      - False
 
+**Documentation**
+
+Remove a volume.
+
+Remove the volume and any clones. Optionally remove the given mount point.
+
 Should Be A Dump File
 ---------------------
-Fails if filename is not an AFS dump file.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -489,11 +657,16 @@ Fails if filename is not an AFS dump file.
      - required
      - 
 
+**Documentation**
+
+Fails if filename is not an AFS dump file.
+
 Should Be Dir
 -------------
-Fails if path is not a directory.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -502,12 +675,17 @@ Fails if path is not a directory.
    * - path
      - required
      - 
+
+**Documentation**
+
+Fails if path is not a directory.
 
 Should Be File
 --------------
-Fails if path is not a file.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -516,12 +694,17 @@ Fails if path is not a file.
    * - path
      - required
      - 
+
+**Documentation**
+
+Fails if path is not a file.
 
 Should Be Symlink
 -----------------
-Fails if path is not a symlink.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -530,12 +713,17 @@ Fails if path is not a symlink.
    * - path
      - required
      - 
+
+**Documentation**
+
+Fails if path is not a symlink.
 
 Should Not Be Dir
 -----------------
-Fails if path is a directory.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -544,12 +732,17 @@ Fails if path is a directory.
    * - path
      - required
      - 
+
+**Documentation**
+
+Fails if path is a directory.
 
 Should Not Be Symlink
 ---------------------
-Fails if path is a symlink.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -559,11 +752,16 @@ Fails if path is a symlink.
      - required
      - 
 
+**Documentation**
+
+Fails if path is a symlink.
+
 Symlink
 -------
-Create a symlink.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -579,11 +777,16 @@ Create a symlink.
      - 
      - 0
 
+**Documentation**
+
+Create a symlink.
+
 Unlink
 ------
-Unlink the directory entry.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -596,11 +799,16 @@ Unlink the directory entry.
      - 
      - 0
 
+**Documentation**
+
+Unlink the directory entry.
+
 Volume Location Matches
 -----------------------
-Fails if volume is not located on the given server and partition.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -619,11 +827,16 @@ Fails if volume is not located on the given server and partition.
      - 
      - rw
 
+**Documentation**
+
+Fails if volume is not located on the given server and partition.
+
 Volume Should Be Locked
 -----------------------
-Fails if the volume is not locked.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -632,12 +845,17 @@ Fails if the volume is not locked.
    * - name
      - required
      - 
+
+**Documentation**
+
+Fails if the volume is not locked.
 
 Volume Should Be Unlocked
 -------------------------
-Fails if the volume is locked.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -647,11 +865,16 @@ Fails if the volume is locked.
      - required
      - 
 
+**Documentation**
+
+Fails if the volume is locked.
+
 Volume Should Exist
 -------------------
-Verify the existence of a read-write volume.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -660,12 +883,20 @@ Verify the existence of a read-write volume.
    * - name_or_id
      - required
      - 
+
+**Documentation**
+
+Verify the existence of a read-write volume.
+
+Fails if the volume entry is not found in the VLDB or the volume is
+not present on the fileserver indicated by the VLDB.
 
 Volume Should Not Exist
 -----------------------
-Fails if volume exists.
 
-.. list-table:: Arguments
+**Arguments**
+
+.. list-table::
    :header-rows: 1
 
    * - Name
@@ -674,4 +905,8 @@ Fails if volume exists.
    * - name_or_id
      - required
      - 
+
+**Documentation**
+
+Fails if volume exists.
 
