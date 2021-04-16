@@ -17,14 +17,14 @@ def write_arguments(f, args):
     f.write('   :header-rows: 1\n')
     f.write('\n')
     f.write('   * - Name\n')
-    f.write('     - \n')
     f.write('     - Default value\n')
+    f.write('     - Notes\n')
     for a in args:
         rq = 'required' if a['required'] else ''
         dv = a['defaultValue'] if a['defaultValue'] else ''
         f.write('   * - %s\n' % a['name'])
-        f.write('     - %s\n' % rq)
         f.write('     - %s\n' % dv)
+        f.write('     - %s\n' % rq)
     f.write('\n')
 
 
