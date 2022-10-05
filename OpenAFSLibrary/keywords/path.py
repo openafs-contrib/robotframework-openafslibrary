@@ -21,9 +21,12 @@
 
 import os
 import random
-from OpenAFSLibrary.six.moves import range
-from robot.api import logger
+import re
 import errno
+
+from OpenAFSLibrary.six.moves import range
+from OpenAFSLibrary.command import fs
+from robot.api import logger
 
 def _convert_errno_parm(code_should_be):
     """ Convert the code_should_be value to an integer
@@ -219,3 +222,14 @@ class _PathKeywords(object):
             raise AssertionError("Empty argument!")
         return os.stat(path).st_ino
 
+    def get_fid(self, path):
+        """Returns the FID of a given path in AFS."""
+        if not path:
+            raise ValueError("Empty argument!")
+        output = fs('getfid', path)
+        m = re.match(r'File .* \((\d+)\.(\d+)\.(\d+)\) located in cell \S+', output)
+        if not m:
+            raise AssertionError("Unable to find fid for path %s" % path)
+        volume, vnode, unique = m.groups()
+        fid = "%d.%d.%d" % (int(volume), int(vnode), int(unique))
+        return fid
