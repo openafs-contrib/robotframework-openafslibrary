@@ -1,7 +1,7 @@
 Keywords
 ========
 
-Version: 0.7.2
+Version: 0.7.2+12.gd7f3491
 
 Access Control List Contains
 ----------------------------
@@ -330,6 +330,25 @@ Get the cache size.
 
 Outputs AFS cache size as the number of 1K blocks.
 
+Get Fid
+-------
+
+**Arguments**
+
+.. list-table::
+   :header-rows: 1
+
+   * - Name
+     - Default value
+     - Notes
+   * - path
+     - 
+     - required
+
+**Documentation**
+
+Returns the FID of a given path in AFS.
+
 Get Inode
 ---------
 
@@ -348,6 +367,25 @@ Get Inode
 **Documentation**
 
 Returns the inode number of a path.
+
+Get Name By Fid
+---------------
+
+**Arguments**
+
+.. list-table::
+   :header-rows: 1
+
+   * - Name
+     - Default value
+     - Notes
+   * - fid
+     - 
+     - required
+
+**Documentation**
+
+Returns the file name by FID.
 
 Get Version
 -----------

@@ -21,9 +21,22 @@
 
 import os
 import random
-from OpenAFSLibrary.six.moves import range
-from robot.api import logger
+import re
 import errno
+import types
+import socket
+
+import lmdb
+import sys
+from collections import OrderedDict as od
+import string
+
+from OpenAFSLibrary.six.moves import range
+from OpenAFSLibrary.command import fs
+from OpenAFSLibrary.keywords.volume import get_volume_entry
+from robot.api import logger
+import py_openafs as rx
+
 
 def _convert_errno_parm(code_should_be):
     """ Convert the code_should_be value to an integer
@@ -219,3 +232,156 @@ class _PathKeywords(object):
             raise AssertionError("Empty argument!")
         return os.stat(path).st_ino
 
+    def get_fid(self, path):
+        """Returns the FID of a given path in AFS."""
+        if not path:
+            raise ValueError("Empty argument!")
+        output = fs('getfid', path)
+        m = re.match(r'File .* \((\d+)\.(\d+)\.(\d+)\) located in cell \S+', output)
+        if not m:
+            raise AssertionError("Unable to find fid for path %s" % path)
+        volume, vnode, unique = m.groups()
+        fid = "%d.%d.%d" % (int(volume), int(vnode), int(unique))
+        return fid
+
+    def _rilookup(self, fid, server, raise_err=True):
+        """
+        This is not a keyword method. It uses RPC to query RIDB on file
+        server.
+        This needs py_openafs installed.
+        Simplest way is to add the dir to $PYTHONPATH environment variable.
+        """
+        rx.rx_Init(0, 0)
+        if server is not None:
+            ip = socket.gethostbyname(server)
+            logger.info("IP address: %s" %ip)
+
+        fserver = '127.0.0.1' if server is None else ip
+        logger.info("File Server: %s" %fserver)
+        try:
+            conn = rx.rx_NewConnection(fserver, rx.RXAFS_port, rx.RXAFS_service_id)
+        except:
+            raise AssertionError("Connection failure: %s" %fserver)
+        name = ""
+
+        f = fid.strip().split(".")
+        if (len(f) != 3):
+            raise AssertionError("Error in parsing FID: %s\nFormat: \"volume.vnode.unique\"" %fid)
+        fid = types.SimpleNamespace(volume=int(f[0]), vnode=int(f[1]), unique=int(f[2]))
+        logger.info("Sent: %d.%d.%d" %(fid.volume, fid.vnode, fid.unique))
+        try:
+            (fname, parent) = rx.RXAFS_InverseLookup2(conn, fid)
+            pfid = "%d.%d.%d" %(parent.volume, parent.vnode, parent.unique)
+            logger.info("Received: Filename: %s Parent: %s" % (fname.decode('utf-8'),pfid ))
+            name = fname.decode('utf-8')
+        except rx.RxError as err:
+            logger.info("Received:", err)
+            if raise_err:
+                raise AssertionError("Filename not found for FID: %s" %fid)
+
+        return name
+
+
+    def get_name_by_fid(self, fid, server=None):
+        """Returns the file name by FID."""
+        if not fid:
+            raise ValueError("Empty argument!")
+
+        name = self._rilookup(fid, server)
+
+        logger.info("File %s found for FID %s" %(name, fid))
+        return name
+
+    def should_not_be_in_RIDB(self, fid, server=None):
+        """Expects the FID to not exist in RIDB."""
+        if not fid:
+            raise ValueError("Empty argument!")
+
+        name = self._rilookup(fid, server, raise_err=False)
+
+        if (len(name) != 0):
+            raise AssertionError("Filename %s found for FID: %s" %(name, fid))
+
+    def generate_simple_RIDB (self, fname):
+        """ Generated a hardcoded file-FID RIDB """
+        if not fname:
+            raise ValueError("Empty argument!")
+        dbdict = od()
+        """
+        (2, 6, 'hello'):hello
+        (3, 4, 'ParentDir'):ParentDir
+        (4, 7, 'level1'):level1
+        (5, 5, 'ChildDir'):ChildDir
+        (6, 8, 'level2'):level2
+        """
+        dbdict[(2, 6, 'hello')] = "hello"
+        dbdict[(3, 4, 'ParentDir')] = "ParentDir"
+        dbdict[(4, 7, 'level1')] = "level1"
+        dbdict[(5, 5, 'ChildDir')] = "ChildDir"
+        dbdict[(6, 8, 'level2')] = "level2"
+
+        with open(fname, 'w+', encoding="utf-8") as f:
+            for k,v in dbdict.items():
+                f.write(str(k) + ":" + v + "\n")
+
+    def _interpret_key(self, key):
+        vnode = int.from_bytes(key[0:4], "little")
+        vunique = int.from_bytes(key[4:8], "little")
+        name = str(key[8:].decode("utf-8")).rstrip('\x00')
+
+        return (vnode, vunique, name)
+
+    def _num_to_char(self, num):
+        """ Num to char helper for volume ID to path """
+        _forward = ['+', '='] + list(string.digits) + list(string.ascii_uppercase) + list(string.ascii_lowercase)
+
+        chars = []
+        if num == 0:
+            chars.append(_forward[0])
+        else:
+            while num != 0:
+                chars.append(_forward[num & 0x3f])
+                num >>= 6
+
+        return ''.join(chars)
+
+    def _vol_to_name(self, partid, volid):
+        """  Num to char helper """
+
+        return '/vicep{0}/AFSIDat/{1}/{2}'.format(partid, self._num_to_char(volid & 0xff), self._num_to_char(volid))
+
+    def dump_RIDB (self, partid, vol, fname):
+        """ Dump the current state of RIDB. Needs to run on Fileserver """
+        if not partid:
+            raise ValueError("Empty partition!")
+
+        if not fname:
+            raise ValueError("Empty dump filename!")
+
+        if not vol:
+            raise ValueError("Empty Volume ID!")
+
+        volid = get_volume_entry(vol)['rw']
+
+        if not volid:
+            raise ValueError("Incorrect Volume name!")
+
+        volid = int(volid)
+
+        dbdir = self._vol_to_name(partid, volid) + "/special/ridb_" + str(volid) + ".db"
+        logger.info("DB location: %s" %dbdir)
+
+        env = lmdb.open(str(dbdir), readonly=True)
+
+        db = od()
+
+        with env.begin() as txn:
+            with txn.cursor() as curs:
+                for key, value in curs:
+                    v1,v2,n = self._interpret_key(key)
+                    db[(v1,v2,n)] = value.decode("utf-8").rstrip('\x00')
+
+        #print("(VNODE, VUNIQUE, FILE_NAME): FILE_NAME\n")
+        with open(fname, 'w+', encoding="utf-8") as f:
+            for k,v in db.items():
+                f.write(str(k) + ":" + v + "\n")
