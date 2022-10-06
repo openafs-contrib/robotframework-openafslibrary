@@ -22,7 +22,10 @@ def name():
 def version():
     """Determine the version number from the most recent git tag."""
     version = os.popen('git describe').read() or '0.0.0'
-    return version.lstrip('v').strip()
+    version = version.lstrip('v').strip()
+    version = version.replace('-', '+', 1)
+    version = version.replace('-', '.')
+    return version
 
 NAME = name()
 VERSION = version()
