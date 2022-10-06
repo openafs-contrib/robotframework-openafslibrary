@@ -1,6 +1,8 @@
 # Minimal makefile for Sphinx documentation
 #
 
+include ../Makefile.config
+
 # You can set these variables from the command line, and also
 # from the environment for the first two.
 SPHINXOPTS    ?=
@@ -15,7 +17,7 @@ help:
 .PHONY: help libdoc Makefile
 
 librst:
-	python librst.py
+	$(PYTHON) librst.py
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).

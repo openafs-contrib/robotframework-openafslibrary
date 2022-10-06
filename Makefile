@@ -26,9 +26,6 @@ help:
 	@echo "  clean          delete generated files"
 	@echo "  distclean      delete generated and config files"
 
-Makefile.config: configure.py
-	python configure.py > $@
-
 include Makefile.config
 
 generated: OpenAFSLibrary/__version__.py
@@ -54,11 +51,11 @@ source = \
 lint: generated
 	$(PYFLAKES) $(source)
 
-checkdocs: # requires collection.checkdocs
+checkdocs: generated # requires collective.checkdocs
 	$(PYTHON) setup.py checkdocs
 
 .PHONY: doc docs
-doc docs:
+doc docs: generated
 	$(MAKE) -C docs librst html
 
 test: generated

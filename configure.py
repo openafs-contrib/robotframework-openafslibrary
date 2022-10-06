@@ -29,7 +29,9 @@ def version():
 
 NAME = name()
 VERSION = version()
-PYTHON = which('python')
+PYTHON = which('python3')
+if PYTHON == 'missing':
+    PYTHON = which('python')
 PYFLAKES = which('pyflakes')
 PIP = which('pip')
 INSTALL = 'pip' if PIP != 'missing' else 'setup'
@@ -40,5 +42,5 @@ VERSION={VERSION}
 PIP={PIP}
 PYTHON={PYTHON}
 PYFLAKES={PYFLAKES}
-INSTALL={INSTALL}\
+INSTALL={INSTALL}
 """.format(**locals()))
