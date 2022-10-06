@@ -1,0 +1,7 @@
+# development requirements
+collective.checkdocs
+pyflakes
+twine
+robotframework
+sphinx
+sphinx_rtd_theme

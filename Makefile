@@ -19,6 +19,7 @@ help:
 	@echo "  uninstall-dev  developer mode uninstall"
 	@echo ""
 	@echo "Development targets:"
+	@echo "  init           initialize development environment"
 	@echo "  lint           run python linter"
 	@echo "  checkdocs      validate documents"
 	@echo "  docs           generate documents"
@@ -28,10 +29,17 @@ help:
 
 include Makefile.config
 
-generated: OpenAFSLibrary/__version__.py
+VIRTUAL_ENV ?= .venv
+
+.venv:
+	$(PYTHON) -m venv .venv
+	.venv/bin/pip install -U pip wheel
+	.venv/bin/pip install -r requirements.txt
 
 OpenAFSLibrary/__version__.py:
 	echo "VERSION = '$(VERSION)'" >$@
+
+init: .venv OpenAFSLibrary/__version__.py
 
 source = \
   OpenAFSLibrary/command.py  \
@@ -48,41 +56,41 @@ source = \
   OpenAFSLibrary/keywords/rx.py \
   OpenAFSLibrary/keywords/volume.py
 
-lint: generated
-	$(PYFLAKES) $(source)
+lint: init
+	$(VIRTUAL_ENV)/bin/pyflakes $(source)
 
-checkdocs: generated # requires collective.checkdocs
-	$(PYTHON) setup.py checkdocs
+checkdocs: init # requires collective.checkdocs
+	$(VIRTUAL_ENV)/bin/python setup.py checkdocs
 
 .PHONY: doc docs
-doc docs: generated
+doc docs: init
 	$(MAKE) -C docs librst html
 
-test: generated
-	$(PYTHON) -m unittest -v test
+test: init
+	$(VIRTUAL_ENV)/bin/python -m unittest -v test
 
-sdist: generated
-	$(PYTHON) setup.py sdist
+sdist: init
+	$(VIRTUAL_ENV)/bin/python setup.py sdist
 
-wheel: generated
-	$(PYTHON) setup.py bdist_wheel
+wheel: init
+	$(VIRTUAL_ENV)/bin/python setup.py bdist_wheel
 
-rpm: generated
-	$(PYTHON) setup.py bdist_rpm
+rpm: init
+	$(VIRTUAL_ENV)/bin/python setup.py bdist_rpm
 
-deb: generated
-	$(PYTHON) setup.py --command-packages=stdeb.command bdist_deb
+deb: init
+	$(VIRTUAL_ENV)/bin/python setup.py --command-packages=stdeb.command bdist_deb
 
 upload: sdist wheel
-	twine upload dist/*
+	.venv/bin/twine upload dist/*
 
-install: generated
+install: init
 	$(MAKE) -f Makefile.$(INSTALL) $@
 
-install-user: generated
+install-user: init
 	$(MAKE) -f Makefile.$(INSTALL) $@
 
-install-dev: generated
+install-dev: init
 	$(MAKE) -f Makefile.$(INSTALL) $@
 
 uninstall:

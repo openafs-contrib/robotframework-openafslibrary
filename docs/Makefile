@@ -1,12 +1,12 @@
 # Minimal makefile for Sphinx documentation
 #
 
-include ../Makefile.config
-
 # You can set these variables from the command line, and also
 # from the environment for the first two.
+VIRTUAL_ENV   ?= ../.venv
+PYTHON        = $(VIRTUAL_ENV)/bin/python
 SPHINXOPTS    ?=
-SPHINXBUILD   ?= sphinx-build
+SPHINXBUILD   ?= $(VIRTUAL_ENV)/bin/sphinx-build
 SOURCEDIR     = source
 BUILDDIR      = build
 
