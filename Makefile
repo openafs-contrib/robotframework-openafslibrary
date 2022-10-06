@@ -11,12 +11,8 @@ help:
 	@echo "  upload         upload packages to pypi.org"
 	@echo ""
 	@echo "Installation targets:"
-	@echo "  install        install package"
+	@echo "  install        install package (user mode)"
 	@echo "  uninstall      uninstall package"
-	@echo "  install-user   user mode install"
-	@echo "  uninstall-user user mode uninstall"
-	@echo "  install-dev    developer mode install"
-	@echo "  uninstall-dev  developer mode uninstall"
 	@echo ""
 	@echo "Development targets:"
 	@echo "  init           initialize development environment"
@@ -87,19 +83,7 @@ upload: sdist wheel
 install: init
 	$(MAKE) -f Makefile.$(INSTALL) $@
 
-install-user: init
-	$(MAKE) -f Makefile.$(INSTALL) $@
-
-install-dev: init
-	$(MAKE) -f Makefile.$(INSTALL) $@
-
 uninstall:
-	$(MAKE) -f Makefile.$(INSTALL) $@
-
-uninstall-user:
-	$(MAKE) -f Makefile.$(INSTALL) $@
-
-uninstall-dev:
 	$(MAKE) -f Makefile.$(INSTALL) $@
 
 clean:
