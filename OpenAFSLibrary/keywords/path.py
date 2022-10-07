@@ -25,7 +25,7 @@ import re
 import errno
 
 from OpenAFSLibrary.six.moves import range
-from OpenAFSLibrary.command import fs
+from OpenAFSLibrary.command import fs, rilookup
 from robot.api import logger
 
 def _convert_errno_parm(code_should_be):
@@ -236,4 +236,16 @@ class _PathKeywords(object):
 
     def get_name_by_fid(self, fid):
         """Returns the file name by FID."""
-        return "todo"  # TODO: lookup name for given fid
+        if not fid:
+            raise ValueError("Empty argument!")
+        output = rilookup(fid)
+        if (("Filename:" not in output) and ("Parent:" not in output)):
+            raise AssertionError("Filename not found for FID: %s" %fid)
+        logger.info("Command output:\n%s" %output)
+        m = re.match(r'Received: Filename: (.+) Parent: .*', output)
+        if not m:
+            raise AssertionError("Filename not found for FID: %s" %fid)
+
+        name = m.group(1)
+        logger.info("File %s found for FID %s" %(name, fid))
+        return name
