@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os
 import re
 
@@ -19,16 +21,7 @@ def name():
         return match.group(1)
     raise ValueError('NAME not found in setup.py.')
 
-def version():
-    """Determine the version number from the most recent git tag."""
-    version = os.popen('git describe').read() or '0.0.0'
-    version = version.lstrip('v').strip()
-    version = version.replace('-', '+', 1)
-    version = version.replace('-', '.')
-    return version
-
 NAME = name()
-VERSION = version()
 PYTHON = which('python3')
 if PYTHON == 'missing':
     PYTHON = which('python')
@@ -37,7 +30,6 @@ INSTALL = 'pip' if PIP != 'missing' else 'setup'
 
 open('Makefile.config', 'w').write("""\
 NAME={NAME}
-VERSION={VERSION}
 PIP={PIP}
 PYTHON={PYTHON}
 INSTALL={INSTALL}

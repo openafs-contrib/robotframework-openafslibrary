@@ -32,10 +32,8 @@ VIRTUAL_ENV ?= .venv
 	.venv/bin/pip install -U pip wheel
 	.venv/bin/pip install -r requirements.txt
 
-OpenAFSLibrary/__version__.py:
-	echo "VERSION = '$(VERSION)'" >$@
-
-init: .venv OpenAFSLibrary/__version__.py
+init: .venv
+	@$(PYTHON) version.py >OpenAFSLibrary/__version__.py
 
 source = \
   OpenAFSLibrary/command.py  \
