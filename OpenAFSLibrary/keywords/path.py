@@ -233,3 +233,7 @@ class _PathKeywords(object):
         volume, vnode, unique = m.groups()
         fid = "%d.%d.%d" % (int(volume), int(vnode), int(unique))
         return fid
+
+    def get_name_by_fid(self, fid):
+        """Returns the file name by FID."""
+        return "todo"  # TODO: lookup name for given fid

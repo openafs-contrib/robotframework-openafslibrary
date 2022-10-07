@@ -1,7 +1,7 @@
 Keywords
 ========
 
-Version: 0.8.0rc1
+Version: 0.7.2+12.gd7f3491
 
 Access Control List Contains
 ----------------------------
@@ -367,6 +367,25 @@ Get Inode
 **Documentation**
 
 Returns the inode number of a path.
+
+Get Name By Fid
+---------------
+
+**Arguments**
+
+.. list-table::
+   :header-rows: 1
+
+   * - Name
+     - Default value
+     - Notes
+   * - fid
+     - 
+     - required
+
+**Documentation**
+
+Returns the file name by FID.
 
 Get Version
 -----------
