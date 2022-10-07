@@ -23,10 +23,12 @@ import os
 import random
 import re
 import errno
+import types
 
 from OpenAFSLibrary.six.moves import range
-from OpenAFSLibrary.command import fs, rilookup
+from OpenAFSLibrary.command import fs
 from robot.api import logger
+import py_openafs as rx
 
 def _convert_errno_parm(code_should_be):
     """ Convert the code_should_be value to an integer
@@ -234,18 +236,39 @@ class _PathKeywords(object):
         fid = "%d.%d.%d" % (int(volume), int(vnode), int(unique))
         return fid
 
+    def _rilookup(self, fid):
+        """ 
+        This is not a keyword method. It uses RPC to query RIDB on file 
+        server.
+        This needs py_openafs installed.
+        Simplest way is to add the dir to $PYTHONPATH environment variable.
+        """
+        rx.rx_Init(0, 0)
+        conn = rx.rx_NewConnection('127.0.0.1', rx.RXAFS_port, rx.RXAFS_service_id)
+        name = ""
+
+        f = fid.strip().split(".")
+        if (len(f) != 3):
+            raise AssertionError("Error in parsing FID: %s\nFormat: \"volume.vnode.unique\"" %fid)
+        fid = types.SimpleNamespace(volume=int(f[0]), vnode=int(f[1]), unique=int(f[2]))
+        logger.info("Sent: %d.%d.%d" %(fid.volume, fid.vnode, fid.unique))
+        try:
+            (fname, parent) = rx.RXAFS_InverseLookup2(conn, fid)
+            pfid = "%d.%d.%d" %(parent.volume, parent.vnode, parent.unique)
+            logger.info("Received: Filename: %s Parent: %s" % (fname.decode('utf-8'),pfid ))
+            name = fname.decode('utf-8')
+        except rx.RxError as err:
+            logger.info("Received:", err)
+            raise AssertionError("Filename not found for FID: %s" %fid)
+
+        return name
+
+    
     def get_name_by_fid(self, fid):
         """Returns the file name by FID."""
         if not fid:
             raise ValueError("Empty argument!")
-        output = rilookup(fid)
-        if (("Filename:" not in output) and ("Parent:" not in output)):
-            raise AssertionError("Filename not found for FID: %s" %fid)
-        logger.info("Command output:\n%s" %output)
-        m = re.match(r'Received: Filename: (.+) Parent: .*', output)
-        if not m:
-            raise AssertionError("Filename not found for FID: %s" %fid)
+        name = self._rilookup(fid)
 
-        name = m.group(1)
         logger.info("File %s found for FID %s" %(name, fid))
         return name

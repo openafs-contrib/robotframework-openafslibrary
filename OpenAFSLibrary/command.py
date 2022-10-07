@@ -88,9 +88,3 @@ def fs(*args):
     if rc != 0:
         raise CommandFailed('fs', args, err)
     return out
-
-def rilookup(*args):
-    rc,out,err = run_program([get_var('RILOOKUP')] + list(args))
-    if rc != 0:
-        raise CommandFailed('get_name_rpc.py', args, err)
-    return out
