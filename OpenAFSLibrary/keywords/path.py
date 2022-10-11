@@ -24,6 +24,7 @@ import random
 import re
 import errno
 import types
+import socket
 
 from OpenAFSLibrary.six.moves import range
 from OpenAFSLibrary.command import fs
@@ -236,7 +237,7 @@ class _PathKeywords(object):
         fid = "%d.%d.%d" % (int(volume), int(vnode), int(unique))
         return fid
 
-    def _rilookup(self, fid):
+    def _rilookup(self, fid, server):
         """ 
         This is not a keyword method. It uses RPC to query RIDB on file 
         server.
@@ -244,7 +245,16 @@ class _PathKeywords(object):
         Simplest way is to add the dir to $PYTHONPATH environment variable.
         """
         rx.rx_Init(0, 0)
-        conn = rx.rx_NewConnection('127.0.0.1', rx.RXAFS_port, rx.RXAFS_service_id)
+        if server is not None:
+            ip = socket.gethostbyname(server)
+            logger.info("IP address: %s" %ip)
+            
+        fserver = '127.0.0.1' if server is None else ip
+        logger.info("File Server: %s" %fserver)
+        try:
+            conn = rx.rx_NewConnection(fserver, rx.RXAFS_port, rx.RXAFS_service_id)
+        except:
+            raise AssertionError("Connection failure: %s" %fserver)
         name = ""
 
         f = fid.strip().split(".")
@@ -264,11 +274,12 @@ class _PathKeywords(object):
         return name
 
     
-    def get_name_by_fid(self, fid):
+    def get_name_by_fid(self, fid, server=None):
         """Returns the file name by FID."""
         if not fid:
             raise ValueError("Empty argument!")
-        name = self._rilookup(fid)
+
+        name = self._rilookup(fid, server)
 
         logger.info("File %s found for FID %s" %(name, fid))
         return name
