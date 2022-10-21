@@ -237,7 +237,7 @@ class _PathKeywords(object):
         fid = "%d.%d.%d" % (int(volume), int(vnode), int(unique))
         return fid
 
-    def _rilookup(self, fid, server):
+    def _rilookup(self, fid, server, raise_err=True):
         """ 
         This is not a keyword method. It uses RPC to query RIDB on file 
         server.
@@ -269,7 +269,8 @@ class _PathKeywords(object):
             name = fname.decode('utf-8')
         except rx.RxError as err:
             logger.info("Received:", err)
-            raise AssertionError("Filename not found for FID: %s" %fid)
+            if raise_err:
+                raise AssertionError("Filename not found for FID: %s" %fid)
 
         return name
 
@@ -283,3 +284,18 @@ class _PathKeywords(object):
 
         logger.info("File %s found for FID %s" %(name, fid))
         return name
+    
+    def should_not_be_in_RIDB(self, fid, server=None):
+        """Expects the FID to not exist in RIDB."""
+        if not fid:
+            raise ValueError("Empty argument!")
+    
+        name = self._rilookup(fid, server, raise_err=False)
+        
+        if (len(name) != 0): 
+            raise AssertionError("Filename %s found for FID: %s" %(name, fid))
+    
+
+
+        
+        
