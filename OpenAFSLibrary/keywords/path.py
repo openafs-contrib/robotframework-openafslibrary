@@ -26,6 +26,11 @@ import errno
 import types
 import socket
 
+import lmdb
+import sys
+from collections import OrderedDict as od
+import string
+
 from OpenAFSLibrary.six.moves import range
 from OpenAFSLibrary.command import fs
 from robot.api import logger
@@ -47,6 +52,7 @@ def _convert_errno_parm(code_should_be):
     return code
 
 class _PathKeywords(object):
+    _forward = ['+', '='] + list(string.digits) + list(string.ascii_uppercase) + list(string.ascii_lowercase)
 
     def create_files(self, path, count=1, size=0, depth=0, width=0, fill='zero'):
         """
@@ -294,8 +300,66 @@ class _PathKeywords(object):
         
         if (len(name) != 0): 
             raise AssertionError("Filename %s found for FID: %s" %(name, fid))
+
+    def generate_simple_RIDB (self, fname):
+        """ Generated a hardcoded file-FID RIDB """
+        if not fname:
+            raise ValueError("Empty argument!")
+        pass
     
+    def _interpret_key(self, key):
+        vnode = int.from_bytes(key[0:4], "little")
+        vunique = int.from_bytes(key[4:8], "little")
+        name = str(key[8:].decode("utf-8")).rstrip('\x00')
+
+        return (vnode, vunique, name)
+
+    def _num_to_char(self, num):
+        """ Num to char helper for volume ID to path """
+        chars = []
+        if num == 0:
+            chars.append(_forward[0])
+        else:
+            while num != 0:
+                chars.append(_forward[num & 0x3f])
+                num >>= 6
+        
+        return ''.join(chars)
+
+    def _vol_to_name(self, partID, volid):
+        """  Num to char helper """
+
+        return '/vicep{0}/AFSIDat/{1}/{2}'.format(partid, self._num_to_char(volid & 0xff), self._num_to_char(volid))
+
+    def dump_RIDB (self, partid, volid, fname):
+        """ Dump the current state of RIDB. Needs to run on Fileserver """
+        if not parition:
+            raise ValueError("Empty partition!")
+        
+        if not fname:
+            raise ValueError("Empty dump filename!")
+        
+        if not volid:
+            raise ValueError("Empty Volume ID!")
+
+        dbdir = self._vol_to_name(partid, volid) + "/special/ridb_" + volid + ".db"
+        logger.info("DB location: %s" %dbdir)
+
+        env = lmdb.open(str(dbdir), readonly=True)
+
+        db = od()
+
+        with env.begin() as txn:
+            with txn.cursor() as curs:
+                for key, value in curs:
+                    v1,v2,n = self._interpret_key(key)
+                    db[(v1,v2,n)] = value.decode("utf-8").rstrip('\x00')
+        
+        #print("(VNODE, VUNIQUE, FILE_NAME): FILE_NAME\n")
+        with open(fname, 'w+', encoding="utf-8") as f:
+            for k,v in db.items():
+                f.write(str(k) + ":" + v)
 
 
-        
-        
+            
+            
