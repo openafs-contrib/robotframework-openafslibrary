@@ -33,8 +33,10 @@ import string
 
 from OpenAFSLibrary.six.moves import range
 from OpenAFSLibrary.command import fs
+from OpenAFSLibrary.keywords.volume import get_volume_entry
 from robot.api import logger
 import py_openafs as rx
+
 
 def _convert_errno_parm(code_should_be):
     """ Convert the code_should_be value to an integer
@@ -52,7 +54,6 @@ def _convert_errno_parm(code_should_be):
     return code
 
 class _PathKeywords(object):
-    _forward = ['+', '='] + list(string.digits) + list(string.ascii_uppercase) + list(string.ascii_lowercase)
 
     def create_files(self, path, count=1, size=0, depth=0, width=0, fill='zero'):
         """
@@ -305,7 +306,23 @@ class _PathKeywords(object):
         """ Generated a hardcoded file-FID RIDB """
         if not fname:
             raise ValueError("Empty argument!")
-        pass
+        dbdict = od()
+        """
+        (2, 6, 'hello'):hello
+        (3, 4, 'ParentDir'):ParentDir
+        (4, 7, 'level1'):level1
+        (5, 5, 'ChildDir'):ChildDir
+        (6, 8, 'level2'):level2
+        """
+        dbdict[(2, 6, 'hello')] = "hello"
+        dbdict[(3, 4, 'ParentDir')] = "ParentDir"
+        dbdict[(4, 7, 'level1')] = "level1"
+        dbdict[(5, 5, 'ChildDir')] = "ChildDir"
+        dbdict[(6, 8, 'level2')] = "level2"
+
+        with open(fname, 'w+', encoding="utf-8") as f:
+            for k,v in dbdict.items():
+                f.write(str(k) + ":" + v + "\n")
     
     def _interpret_key(self, key):
         vnode = int.from_bytes(key[0:4], "little")
@@ -316,6 +333,8 @@ class _PathKeywords(object):
 
     def _num_to_char(self, num):
         """ Num to char helper for volume ID to path """
+        _forward = ['+', '='] + list(string.digits) + list(string.ascii_uppercase) + list(string.ascii_lowercase)
+
         chars = []
         if num == 0:
             chars.append(_forward[0])
@@ -326,23 +345,30 @@ class _PathKeywords(object):
         
         return ''.join(chars)
 
-    def _vol_to_name(self, partID, volid):
+    def _vol_to_name(self, partid, volid):
         """  Num to char helper """
 
         return '/vicep{0}/AFSIDat/{1}/{2}'.format(partid, self._num_to_char(volid & 0xff), self._num_to_char(volid))
 
-    def dump_RIDB (self, partid, volid, fname):
+    def dump_RIDB (self, partid, vol, fname):
         """ Dump the current state of RIDB. Needs to run on Fileserver """
-        if not parition:
+        if not partid:
             raise ValueError("Empty partition!")
         
         if not fname:
             raise ValueError("Empty dump filename!")
         
-        if not volid:
+        if not vol:
             raise ValueError("Empty Volume ID!")
+        
+        volid = get_volume_entry(vol)['rw']
 
-        dbdir = self._vol_to_name(partid, volid) + "/special/ridb_" + volid + ".db"
+        if not volid:
+            raise ValueError("Incorrect Volume name!")
+        
+        volid = int(volid)
+
+        dbdir = self._vol_to_name(partid, volid) + "/special/ridb_" + str(volid) + ".db"
         logger.info("DB location: %s" %dbdir)
 
         env = lmdb.open(str(dbdir), readonly=True)
@@ -358,7 +384,7 @@ class _PathKeywords(object):
         #print("(VNODE, VUNIQUE, FILE_NAME): FILE_NAME\n")
         with open(fname, 'w+', encoding="utf-8") as f:
             for k,v in db.items():
-                f.write(str(k) + ":" + v)
+                f.write(str(k) + ":" + v + "\n")
 
 
             
