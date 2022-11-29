@@ -73,7 +73,7 @@ def login_with_keytab(user, keytab):
     if not os.path.exists(keytab):
         raise AssertionError("Keytab file '%s' is missing." % keytab)
     krb5cc = "/tmp/afsrobot.krb5cc"
-    cmd = "KRB5CCNAME=%s %s -5 -k -t %s %s" % (krb5cc, kinit, keytab, principal)
+    cmd = "KRB5CCNAME=%s %s -k -t %s %s" % (krb5cc, kinit, keytab, principal)
     rc,out,err = run_program(cmd)
     if rc:
         raise AssertionError("kinit failed: '%s'; exit code = %d" % (cmd, rc))
