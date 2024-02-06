@@ -2,6 +2,7 @@
 *.swp
 *.egg-info/
 .venv/
+.tox/
 dist/
 build/
 Makefile.config
