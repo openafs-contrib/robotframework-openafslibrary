@@ -19,8 +19,16 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
+import sys
 from robot.libraries.BuiltIn import BuiltIn,RobotNotRunningError
-from OpenAFSLibrary.six import string_types
+
+
+PY2 = (sys.version_info[0] == 2)
+if PY2:
+    string_types = basestring,
+else:
+    string_types = str,
+
 
 _rf = BuiltIn()
 

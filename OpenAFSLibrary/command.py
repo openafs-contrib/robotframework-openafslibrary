@@ -19,10 +19,18 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
+import sys
 import subprocess
 from robot.api import logger
 from OpenAFSLibrary.variable import get_var
-from OpenAFSLibrary.six import string_types, PY2
+
+
+PY2 = (sys.version_info[0] == 2)
+if PY2:
+    string_types = basestring,
+else:
+    string_types = str,
+
 
 class CommandFailed(Exception):
     def __init__(self, name, args, err):

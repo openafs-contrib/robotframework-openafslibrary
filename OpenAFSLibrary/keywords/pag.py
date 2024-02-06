@@ -20,10 +20,14 @@
 #
 
 import os
+import sys
 import subprocess
 from robot.api import logger
 from OpenAFSLibrary.variable import get_var, get_bool
-from OpenAFSLibrary.six import PY2
+
+
+PY2 = (sys.version_info[0] == 2)
+
 
 PAG_MIN = 0x41000000
 PAG_MAX = 0x41ffffff
