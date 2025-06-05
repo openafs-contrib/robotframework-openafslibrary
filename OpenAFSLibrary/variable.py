@@ -20,7 +20,9 @@
 #
 
 import sys
-from robot.libraries.BuiltIn import BuiltIn,RobotNotRunningError
+import os
+
+from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
 
 
 PY2 = (sys.version_info[0] == 2)
@@ -32,6 +34,25 @@ else:
 
 _rf = BuiltIn()
 
+_default_value = {
+    'AFS_CELL': 'example.com',
+    'KRB_AFS_KEYTAB': 'robot.keytab',
+    'KRB_REALM': 'EXAMPLE.COM',
+    'AFS_AKIMPERSONATE': False,
+    'PAG_ONEGROUP': True,
+    'AKLOG': 'aklog',
+    'BOS': 'bos',
+    'FS': 'fs',
+    'KDESTROY': 'kdestroy',
+    'KINIT': 'kinit',
+    'KLOG_KRB5': 'klog.krb5',
+    'PAGSH': 'pagsh',
+    'RXDEBUG': 'rxdebug',
+    'UNLOG': 'unlog',
+    'VOS': 'vos',
+}
+
+
 class VariableMissing(Exception):
     pass
 
@@ -42,14 +63,30 @@ def get_var(name):
     """Return the variable value as a string."""
     if not name:
         raise ValueError("get_var argument is missing!")
+
     try:
         value = _rf.get_variable_value("${%s}" % name)
     except AttributeError:
         value = None
+
+    if value is None:
+        try:
+            value = os.environ[name]
+        except KeyError:
+            value = None
+
+    if value is None:
+        try:
+            value = _default_value[name]
+        except KeyError:
+            value = None
+
     if value is None:
         raise VariableMissing(name)
+
     if value == "":
         raise VariableEmpty(name)
+
     return value
 
 def get_bool(name):
