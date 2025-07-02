@@ -20,15 +20,9 @@
 #
 
 import os
-import sys
 import random
 from robot.api import logger
 import errno
-
-
-PY2 = (sys.version_info[0] == 2)
-if PY2:
-    range = xrange
 
 
 def _convert_errno_parm(code_should_be):
