@@ -47,10 +47,10 @@ def _get_pag_from_two_groups(g0, g1):
     g0 -= 0x3F00
     g1 -= 0x3F00
     if g0 < 0xC000 and g1 < 0xC000:
-        l = ((g0 & 0x3FFF) << 14) | (g1 & 0x3FFF)
-        h = g0 >> 14
-        h = (g1 >> 14) + h + h + h
-        x = (h << 28) | l
+        low = ((g0 & 0x3FFF) << 14) | (g1 & 0x3FFF)
+        high = g0 >> 14
+        high = (g1 >> 14) + high + high + high
+        x = (high << 28) | low
         if PAG_MIN <= x <= PAG_MAX:
             pag = x
     return pag
