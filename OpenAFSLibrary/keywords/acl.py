@@ -250,7 +250,7 @@ def _test1():
     for x, y in cases:
         try:
             z = "".join(normalize(list(x)))
-        except:
+        except Exception:
             assert y is None, "expected exception: x='%s'" % (x)
         if y:
             assert z == y, "expected='%s', got='%s'" % (y, z)
