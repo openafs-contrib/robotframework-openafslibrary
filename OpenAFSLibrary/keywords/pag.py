@@ -61,7 +61,7 @@ def _pag_from_groups(gids):
     pag = None
     try:
         PAG_ONEGROUP = get_bool("PAG_ONEGROUP")
-    except:
+    except Exception:
         PAG_ONEGROUP = True
 
     if PAG_ONEGROUP:

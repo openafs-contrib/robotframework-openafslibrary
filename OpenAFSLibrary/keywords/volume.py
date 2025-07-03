@@ -292,7 +292,7 @@ class _VolumeKeywords(object):
         """
         try:
             volume = get_volume_entry(name_or_id)
-        except:
+        except Exception:
             volume = None
         if volume:
             raise AssertionError("Volume entry found in vldb for %s" % (name_or_id))
