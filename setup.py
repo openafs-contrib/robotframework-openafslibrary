@@ -1,13 +1,10 @@
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup # Fallback to distutils.
+import setuptools
 
-NAME = 'robotframework_openafslibrary'
-exec(open('OpenAFSLibrary/__version__.py').read()) # get VERSION
+# Set the VERSION variable by sourcing this one line python file.
+exec(open('OpenAFSLibrary/__version__.py').read())
 
-setup(
-    name=NAME,
+setuptools.setup(
+    name='robotframework_openafslibrary',
     version=VERSION,
     description='Robot Framework test library for OpenAFS',
     long_description=open('README.rst').read(),
