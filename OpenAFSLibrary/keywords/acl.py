@@ -329,7 +329,7 @@ def _test4():
 
 def main():
     global get_var  # monkey patch a test stub.
-    get_var = lambda name: {"FS": "/usr/afs/bin/fs"}[name]
+    get_var = lambda name: {"FS": "/usr/afs/bin/fs"}[name]  # noqa:E731
     _test1()
     _test2()
     _test3()
