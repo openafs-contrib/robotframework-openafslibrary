@@ -40,7 +40,7 @@ def normalize(rights):
     """
     # First, check for illegal chars.
     for r in rights:
-        if not r in _RIGHTS:
+        if r not in _RIGHTS:
             raise AssertionError("Illegal rights character: %s" % (r))
     # Create a set in the standard order.
     normalized = []
@@ -119,7 +119,7 @@ class AccessControlList:
             m = re.match(r"  (\S+) (\S+)", line)
             if m:
                 name, rights = (m.group(1), m.group(2))
-                if not section in ("+", "-"):
+                if section not in ("+", "-"):
                     raise AssertionError(
                         "Failed to parse fs listacl; missing section label"
                     )

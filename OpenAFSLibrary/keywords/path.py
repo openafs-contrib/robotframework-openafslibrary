@@ -119,7 +119,7 @@ class _PathKeywords(object):
         """Fails if directory entry does not exist in the given path."""
         base = os.path.basename(path)
         dir = os.path.dirname(path)
-        if not base in os.listdir(dir):
+        if base not in os.listdir(dir):
             raise AssertionError(
                 "Directory entry '%s' does not exist in '%s'." % (base, dir)
             )
