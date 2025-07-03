@@ -27,29 +27,31 @@ from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
 _rf = BuiltIn()
 
 _default_value = {
-    'AFS_CELL': 'example.com',
-    'KRB_AFS_KEYTAB': 'robot.keytab',
-    'KRB_REALM': 'EXAMPLE.COM',
-    'AFS_AKIMPERSONATE': False,
-    'PAG_ONEGROUP': True,
-    'AKLOG': 'aklog',
-    'BOS': 'bos',
-    'FS': 'fs',
-    'KDESTROY': 'kdestroy',
-    'KINIT': 'kinit',
-    'KLOG_KRB5': 'klog.krb5',
-    'PAGSH': 'pagsh',
-    'RXDEBUG': 'rxdebug',
-    'UNLOG': 'unlog',
-    'VOS': 'vos',
+    "AFS_CELL": "example.com",
+    "KRB_AFS_KEYTAB": "robot.keytab",
+    "KRB_REALM": "EXAMPLE.COM",
+    "AFS_AKIMPERSONATE": False,
+    "PAG_ONEGROUP": True,
+    "AKLOG": "aklog",
+    "BOS": "bos",
+    "FS": "fs",
+    "KDESTROY": "kdestroy",
+    "KINIT": "kinit",
+    "KLOG_KRB5": "klog.krb5",
+    "PAGSH": "pagsh",
+    "RXDEBUG": "rxdebug",
+    "UNLOG": "unlog",
+    "VOS": "vos",
 }
 
 
 class VariableMissing(Exception):
     pass
 
+
 class VariableEmpty(Exception):
     pass
+
 
 def get_var(name):
     """Return the variable value as a string."""
@@ -81,6 +83,7 @@ def get_var(name):
 
     return value
 
+
 def get_bool(name):
     """Return the variable value as a bool."""
     value = get_var(name)
@@ -94,6 +97,7 @@ def get_bool(name):
         return True
     return False
 
+
 def _split_into_list(name):
     # Split the given scalar into a list. This can be useful since lists can be
     # created only from tests or resources, and we set variables at runtime via
@@ -102,8 +106,8 @@ def _split_into_list(name):
     try:
         value = get_var(name)
         if isinstance(value, str):
-            values = [v.strip() for v in value.split(',')]
-            _rf.set_global_variable('@{%s}' % name, *values)
+            values = [v.strip() for v in value.split(",")]
+            _rf.set_global_variable("@{%s}" % name, *values)
     except VariableMissing:
         pass
     except VariableEmpty:
@@ -111,4 +115,5 @@ def _split_into_list(name):
     except RobotNotRunningError:
         pass
 
-_split_into_list('AFS_FILESERVERS')
+
+_split_into_list("AFS_FILESERVERS")

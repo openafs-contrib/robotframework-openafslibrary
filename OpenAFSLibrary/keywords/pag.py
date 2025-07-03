@@ -26,8 +26,9 @@ from OpenAFSLibrary.variable import get_var, get_bool
 
 
 PAG_MIN = 0x41000000
-PAG_MAX = 0x41ffffff
+PAG_MAX = 0x41FFFFFF
 PAG_ONEGROUP = True
+
 
 def _get_pag_from_one_group(gids):
     pag = None
@@ -40,24 +41,26 @@ def _get_pag_from_one_group(gids):
                 raise AssertionError("More than one PAG group found.")
     return pag
 
+
 def _get_pag_from_two_groups(g0, g1):
     pag = None
-    g0 -= 0x3f00
-    g1 -= 0x3f00
-    if g0 < 0xc000 and g1 < 0xc000:
-        l = ((g0 & 0x3fff) << 14) | (g1 & 0x3fff)
-        h = (g0 >> 14)
+    g0 -= 0x3F00
+    g1 -= 0x3F00
+    if g0 < 0xC000 and g1 < 0xC000:
+        l = ((g0 & 0x3FFF) << 14) | (g1 & 0x3FFF)
+        h = g0 >> 14
         h = (g1 >> 14) + h + h + h
-        x = ((h << 28) | l)
+        x = (h << 28) | l
         if PAG_MIN <= x <= PAG_MAX:
             pag = x
     return pag
+
 
 def _pag_from_groups(gids):
     logger.debug("gids=%s" % (gids,))
     pag = None
     try:
-        PAG_ONEGROUP = get_bool('PAG_ONEGROUP')
+        PAG_ONEGROUP = get_bool("PAG_ONEGROUP")
     except:
         PAG_ONEGROUP = True
 
@@ -66,6 +69,7 @@ def _pag_from_groups(gids):
     elif len(gids) > 1:
         pag = _get_pag_from_two_groups(gids[0], gids[1])
     return pag
+
 
 class _PagKeywords(object):
 
@@ -76,12 +80,12 @@ class _PagKeywords(object):
             gids = os.getgroups()
         else:
             # Convert the given string to a list of ints.
-            gids = [int(x.strip('[],')) for x in gids.split()]
+            gids = [int(x.strip("[],")) for x in gids.split()]
         pag = _pag_from_groups(gids)
         if pag is None:
-            pag = 'None'
+            pag = "None"
         else:
-            pag = '%d' % pag
+            pag = "%d" % pag
         return pag
 
     def pag_should_exist(self):
@@ -105,7 +109,7 @@ class _PagKeywords(object):
         if pag is None:
             raise AssertionError("PAG is None.")
         pag = pag.rstrip()
-        if pag == 'None' or pag == '':
+        if pag == "None" or pag == "":
             raise AssertionError("PAG is None.")
         pag = int(pag)
         logger.info("Checking PAG value %d" % (pag))
@@ -115,11 +119,13 @@ class _PagKeywords(object):
 
     def pag_shell(self, script):
         """Run a command in the pagsh and returns the output."""
-        PAGSH = get_var('PAGSH')
+        PAGSH = get_var("PAGSH")
         logger.info("running %s" % (PAGSH,))
         logger.debug("script=%s" % (script,))
-        script = script.encode('ascii')
-        pagsh = subprocess.Popen(PAGSH, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        script = script.encode("ascii")
+        pagsh = subprocess.Popen(
+            PAGSH, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        )
         (output, error) = pagsh.communicate(input=script)
         code = pagsh.wait()
         if code == 0:
@@ -133,6 +139,5 @@ class _PagKeywords(object):
             logger.info("stdout=%s" % (output,))
             logger.info("stderr=%s" % (error,))
             raise AssertionError("Failed to run pagsh!")
-        output = output.decode('ascii')
+        output = output.decode("ascii")
         return output
-

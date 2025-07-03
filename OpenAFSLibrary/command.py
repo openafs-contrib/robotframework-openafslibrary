@@ -34,9 +34,11 @@ class CommandFailed(Exception):
         msg = "%s %s failed! %s" % (self.name, self.args, self.err.strip())
         return repr(msg)
 
+
 class NoSuchEntryError(CommandFailed):
     def __init__(self, args):
         CommandFailed.__init__(self, "vos", args, "no such volume in the vldb")
+
 
 def run_program(args):
     if isinstance(args, str):
@@ -47,40 +49,46 @@ def run_program(args):
         cmd_line = " ".join(args)
         shell = False
     logger.info("running: %s" % cmd_line)
-    proc = subprocess.Popen(args, shell=shell, bufsize=-1, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    stdout,stderr = proc.communicate()
+    proc = subprocess.Popen(
+        args, shell=shell, bufsize=-1, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    )
+    stdout, stderr = proc.communicate()
     if proc.returncode:
         logger.info("output: %s" % (stdout,))
         logger.info("error: %s" % (stderr,))
-    output = stdout.decode('utf-8')
-    error = stderr.decode('utf-8')
+    output = stdout.decode("utf-8")
+    error = stderr.decode("utf-8")
     return (proc.returncode, output, error)
 
+
 def rxdebug(*args):
-    rc,out,err = run_program([get_var('RXDEBUG')] + list(args))
+    rc, out, err = run_program([get_var("RXDEBUG")] + list(args))
     if rc != 0:
-        raise CommandFailed('rxdebug', args, err)
+        raise CommandFailed("rxdebug", args, err)
     return out
+
 
 def bos(*args):
-    rc,out,err = run_program([get_var('BOS')] + list(args))
+    rc, out, err = run_program([get_var("BOS")] + list(args))
     if rc != 0:
-        raise CommandFailed('bos', args, err)
+        raise CommandFailed("bos", args, err)
     return out
 
+
 def vos(*args):
-    rc,out,err = run_program([get_var('VOS')] + list(args))
+    rc, out, err = run_program([get_var("VOS")] + list(args))
     if rc != 0:
         for line in err.splitlines():
             if "VLDB: no such entry" in line:
                 raise NoSuchEntryError(args)
             if "does not exist" in line:
                 raise NoSuchEntryError(args)
-        raise CommandFailed('vos', args, err)
+        raise CommandFailed("vos", args, err)
     return out
 
+
 def fs(*args):
-    rc,out,err = run_program([get_var('FS')] + list(args))
+    rc, out, err = run_program([get_var("FS")] + list(args))
     if rc != 0:
-        raise CommandFailed('fs', args, err)
+        raise CommandFailed("fs", args, err)
     return out
