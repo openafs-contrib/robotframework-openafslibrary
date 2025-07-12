@@ -4,7 +4,16 @@
 import pytest
 import os
 import sys
-from OpenAFSLibrary.command import run_program
+
+from OpenAFSLibrary.command import (
+    run_program,
+    rxdebug,
+    bos,
+    vos,
+    fs,
+    CommandFailed,
+    NoSuchEntryError,
+)
 
 
 @pytest.fixture
@@ -40,3 +49,65 @@ def test_run_program__raises_permission_error_when_file_is_not_executable(
     os.chmod(script_path, 0o644)
     with pytest.raises(PermissionError):
         rc, out, err = run_program([script_path])
+
+
+def test_run_rxdebug__runs_rxdebug(process):
+    usage = "Usage: rxdebug -servers ..."
+    proc = process(code=0, stdout=[usage])
+    out = rxdebug("-help")
+    assert out == usage
+    assert proc.args == ["rxdebug", "-help"]
+
+
+def test_run_vos__runs_vos(process):
+    usage = "vos: Commands are: ..."
+    proc = process(stdout=[usage])
+    out = vos("help")
+    assert out == usage
+    assert proc.args == ["vos", "help"]
+
+
+def test_run_vos__raises_command_failed_when_subcommand_is_invalid(process):
+    proc = process(code=255, stdout=["vos: Unrecognized operation"])
+    with pytest.raises(CommandFailed):
+        vos("bogus")
+    assert proc.args == ["vos", "bogus"]
+
+
+def test_run_vos__raises_no_such_entry_error_when_vldb_error_is_seen(process):
+    proc = process(code=255, stderr=["error", "VLDB: no such entry"])
+    with pytest.raises(NoSuchEntryError):
+        vos("examine")
+    assert proc.args == ["vos", "examine"]
+
+
+def test_run_vos__raises_no_such_entry_error_when_does_not_exists_error_seen(process):
+    proc = process(code=255, stderr=["error", "does not exist"])
+    with pytest.raises(NoSuchEntryError):
+        vos("examine")
+    assert proc.args == ["vos", "examine"]
+
+
+def test_run_bos__runs_bos_command(process):
+    usage = "bos: Commands are: ..."
+    proc = process(stdout=[usage])
+    out = bos("help")
+    assert out == usage
+    assert proc.args == ["bos", "help"]
+
+
+def test_run_fs__runs_fs_command(process):
+    usage = "fs: Commands are: ..."
+    proc = process(stdout=[usage])
+    out = fs("help")
+    assert out == usage
+    assert proc.args == ["fs", "help"]
+
+
+def test_run_fs__runs_command_in_path_when_fs_variable_is_set(process, variables):
+    usage = "fs: Commands are: ..."
+    proc = process(stdout=[usage])
+    variables["FS"] = "/my/custom/path/fs"
+    out = fs("help")
+    assert out == usage
+    assert proc.args == ["/my/custom/path/fs", "help"]
