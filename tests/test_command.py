@@ -41,6 +41,9 @@ def test_run_program__raises_file_not_found_when_program_is_missing(logged, tmp_
         rc, out, err = run_program([missing_path])
 
 
+@pytest.mark.skipif(
+    sys.platform == "win32", reason="This test is not applicable on Windows."
+)
 def test_run_program__raises_permission_error_when_file_is_not_executable(
     python, logged, tmp_path
 ):

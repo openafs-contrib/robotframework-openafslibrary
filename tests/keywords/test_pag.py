@@ -2,6 +2,7 @@
 # See LICENSE
 
 import pytest
+import sys
 import OpenAFSLibrary.keywords.pag
 
 from unittest.mock import Mock
@@ -40,6 +41,9 @@ def test__get_pag_from_two_groups():
     raise NotImplementedError("test not implemented")
 
 
+@pytest.mark.skipif(
+    sys.platform == "win32", reason="This test is not applicable on Windows."
+)
 @pytest.mark.parametrize(
     "gids,expected",
     [
@@ -54,6 +58,9 @@ def test_pag_from_groups__succeeds(keywords, gids, expected):
     assert got == expected
 
 
+@pytest.mark.skipif(
+    sys.platform == "win32", reason="This test is not applicable on Windows."
+)
 @pytest.mark.parametrize(
     "gids,expected",
     [
@@ -71,6 +78,9 @@ def test_pag_from_groups__succeeds_when_getting_current_groups(
     assert got == expected
 
 
+@pytest.mark.skipif(
+    sys.platform == "win32", reason="This test is not applicable on Windows."
+)
 def test_pag_should_exist__succeeds_when_pag_is_present(keywords, monkeypatch):
     gids = [4, 131, 139, 1001, 1098354308]
     mock_getgroups = Mock(return_value=gids)
@@ -78,6 +88,9 @@ def test_pag_should_exist__succeeds_when_pag_is_present(keywords, monkeypatch):
     keywords.pag_should_exist()
 
 
+@pytest.mark.skipif(
+    sys.platform == "win32", reason="This test is not applicable on Windows."
+)
 def test_pag_should_exist__fails_when_pag_is_missing(keywords, monkeypatch):
     gids = [4, 131, 139, 1001]
     mock_getgroups = Mock(return_value=gids)
@@ -87,6 +100,9 @@ def test_pag_should_exist__fails_when_pag_is_missing(keywords, monkeypatch):
     assert "PAG is not set" in str(e)
 
 
+@pytest.mark.skipif(
+    sys.platform == "win32", reason="This test is not applicable on Windows."
+)
 def test_pag_should_not_exist__succeeds_when_pag_is_missing(keywords, monkeypatch):
     gids = [4, 131, 139, 1001]
     mock_getgroups = Mock(return_value=gids)
@@ -94,6 +110,9 @@ def test_pag_should_not_exist__succeeds_when_pag_is_missing(keywords, monkeypatc
     keywords.pag_should_not_exist()
 
 
+@pytest.mark.skipif(
+    sys.platform == "win32", reason="This test is not applicable on Windows."
+)
 def test_pag_should_not_exist__fails_when_pag_is_present(keywords, monkeypatch):
     gids = [4, 131, 139, 1001, 1098354308]
     mock_getgroups = Mock(return_value=gids)

@@ -4,6 +4,7 @@
 import pytest
 import errno
 import os
+import sys
 
 from OpenAFSLibrary.keywords.path import (
     _convert_errno_parm,
@@ -92,6 +93,9 @@ def test_should_be_file__raises_exception_when_file_is_missing(keywords, tmp_pat
     assert "is not a file" in str(e)
 
 
+@pytest.mark.skipif(
+    sys.platform == "win32", reason="This test is not applicable on Windows."
+)
 def test_file_should_be_executable__succeeds_when_file_has_x_mode_bits(
     keywords,
     tmp_file,
@@ -100,6 +104,9 @@ def test_file_should_be_executable__succeeds_when_file_has_x_mode_bits(
     keywords.file_should_be_executable(str(tmp_file))
 
 
+@pytest.mark.skipif(
+    sys.platform == "win32", reason="This test is not applicable on Windows."
+)
 def test_file_should_be_executable__raises_exception_when_file_has_no_x_mode_bits(
     keywords,
     tmp_file,
