@@ -54,7 +54,9 @@ def test_akimpersonate___runs_aklog(process):
     assert proc.args == expected
 
 
-def test_akimpersonate__run_aklog_with_values_when_variable_are_set(process, variables):
+def test_akimpersonate__run_aklog_with_values__when__variable_are_set(
+    process, variables
+):
     proc = process()
     variables["AKLOG"] = "v1"
     variables["AFS_CELL"] = "v2"
@@ -64,7 +66,7 @@ def test_akimpersonate__run_aklog_with_values_when_variable_are_set(process, var
     assert proc.args == "v1 -d -c v2 -k v3 -keytab v4 -principal user@v3"
 
 
-def test_akimpersonate__raises_assertion_error_when_aklog_fails(process):
+def test_akimpersonate__raises_assertion_error__when__aklog_fails(process):
     process(code=1, stderr=["fail test"])
     with pytest.raises(AssertionError) as e:
         akimpersonate("user")
@@ -80,7 +82,7 @@ def test_login_with_password__runs_klog_krb5(process):
     assert proc.args == expected
 
 
-def test_login_with_password__run_klog_krb5_with_values_when_variables_are_set(
+def test_login_with_password__run_klog_krb5_with_values__when__variables_are_set(
     process, variables
 ):
     proc = process()
@@ -102,7 +104,7 @@ def test_login_with_password__run_klog_krb5_with_values_when_variables_are_set(
         ("user", ""),
     ],
 )
-def test_login_with_password__raises_assertion_error_when_arg_is_missing(
+def test_login_with_password__raises_assertion_error__when__arg_is_missing(
     process, user, password
 ):
     with pytest.raises(AssertionError) as e:
@@ -118,7 +120,7 @@ def test_login_with_keytab__runs_kinit_and_aklog(process, tmp_keytab):
     assert proc_aklog.args == "aklog -d -c example.com -k EXAMPLE.COM"
 
 
-def test_login_with_keytab__specified_commands_when_variables_are_set(
+def test_login_with_keytab__specified_commands__when__variables_are_set(
     process, variables, tmp_keytab
 ):
     proc_kinit = process()
@@ -162,7 +164,7 @@ def test_login_with_keytab(keywords, process, tmp_keytab):
     assert proc_aklog.args == "aklog -d -c example.com -k EXAMPLE.COM"
 
 
-def test_login__raises_value_error_when_args_are_missing(keywords):
+def test_login__raises_value_error__when__args_are_missing(keywords):
 
     with pytest.raises(ValueError) as e:
         keywords.login("user")
@@ -177,7 +179,7 @@ def test_logout__runs_kdestroy_and_unlog(keywords, process):
     assert proc_unlog.args == "unlog"
 
 
-def test_logout__runs_commands_when_variables_are_set(keywords, process, variables):
+def test_logout__runs_commands__when__variables_are_set(keywords, process, variables):
     proc_kdestroy = process()
     proc_unlog = process()
     variables["AFS_AKIMPERSONATE"] = False
@@ -188,7 +190,7 @@ def test_logout__runs_commands_when_variables_are_set(keywords, process, variabl
     assert proc_unlog.args == "v2"
 
 
-def test_logout__runs_unlog_when_akimperonate_variable_is_true(
+def test_logout__runs_unlog__when__akimperonate_variable_is_true(
     keywords, process, variables
 ):
     proc_unlog = process()

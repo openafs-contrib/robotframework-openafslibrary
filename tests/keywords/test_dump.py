@@ -32,32 +32,32 @@ class Test_VolumeDump:
 #
 
 
-def test_should_be_a_dump_file__succeeds_when_file_is_a_dump(keywords, tmp_path):
+def test_should_be_a_dump_file__succeeds__when__file_is_a_dump(keywords, tmp_path):
     filename = tmp_path / "test.dump"
     keywords.create_dump(filename, size="small")
     assert filename.exists()
     keywords.should_be_a_dump_file(filename)
 
 
-def test_create_dump__creates_dump_when_contains_is_bogus_acl(keywords, tmp_path):
+def test_create_dump__creates_dump__when__contains_is_bogus_acl(keywords, tmp_path):
     filename = tmp_path / "test.dump"
     keywords.create_dump(filename, size="small", contains="bogus-acl")
     assert filename.exists()
 
 
-def test_create_dump__creates_empty_dump_when_size_is_empty(keywords, tmp_path):
+def test_create_dump__creates_empty_dump__when__size_is_empty(keywords, tmp_path):
     filename = tmp_path / "test.dump"
     keywords.create_dump(filename, size="empty")
     assert filename.exists()
 
 
-def test_create_dump__creates_small_dump_when_size_is_small(keywords, tmp_path):
+def test_create_dump__creates_small_dump__when__size_is_small(keywords, tmp_path):
     filename = tmp_path / "test.dump"
     keywords.create_dump(filename, size="small")
     assert filename.exists()
 
 
-def test_create_dump__raises_value_error_when_size_is_bogus(keywords, tmp_path):
+def test_create_dump__raises_value_error__when__size_is_bogus(keywords, tmp_path):
     filename = tmp_path / "test.dump"
     with pytest.raises(ValueError):
         keywords.create_dump(filename, size="bogus")

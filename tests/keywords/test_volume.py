@@ -171,7 +171,7 @@ def test__zap_volume__runs_vos_zap(process):
     _zap_volume(name, server, part)
 
 
-def test_create_volume__creates_volume_when_default_args_given(
+def test_create_volume__creates_volume__when__default_args_given(
     keywords, process, monkeypatch
 ):
     name = "test"
@@ -203,7 +203,7 @@ def test_create_volume__creates_volume_when_default_args_given(
     assert got == volid
 
 
-def test_remove_volume__deletes_volume_when_present(keywords, process):
+def test_remove_volume__deletes_volume__when__present(keywords, process):
     print()
     name = "test"
     server = "fs1.example.org"
@@ -236,7 +236,7 @@ def test_remove_volume__deletes_volume_when_present(keywords, process):
     keywords.remove_volume(name)
 
 
-def test_volume_should_not_exist__succeeds_when_volume_is_not_present(
+def test_volume_should_not_exist__succeeds__when__volume_is_not_present(
     keywords, process
 ):
     name = "test"
@@ -256,7 +256,7 @@ def test_volume_should_not_exist__succeeds_when_volume_is_not_present(
     keywords.volume_should_not_exist(name)
 
 
-def test_volume_location_matches__succeeds_when_volume_resides_on_given_site(
+def test_volume_location_matches__succeeds__when__volume_resides_on_given_site(
     keywords, process, monkeypatch
 ):
     name = "test"
@@ -310,7 +310,7 @@ def test_volume_location_matches__succeeds_when_volume_resides_on_given_site(
     keywords.volume_location_matches(name, server, part)
 
 
-def test_volume_should_be_locked__fails_when_volume_is_not_locked(keywords, process):
+def test_volume_should_be_locked__fails__when__volume_is_not_locked(keywords, process):
     name = "test"
     process(
         expected_args=[
@@ -335,7 +335,7 @@ def test_volume_should_be_locked__fails_when_volume_is_not_locked(keywords, proc
     assert f"Volume '{name}' is not locked." in str(e)
 
 
-def test_volume_should_be_unlocked__success_when_volume_is_not_locked(
+def test_volume_should_be_unlocked__success__when__volume_is_not_locked(
     keywords, process
 ):
     name = "test"

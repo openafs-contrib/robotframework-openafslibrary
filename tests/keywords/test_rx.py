@@ -22,7 +22,7 @@ def test_get_version__success(keywords, process):
     assert version.startswith("OpenAFS 1.9.2")
 
 
-def test_get_version__fails_when_timeout(keywords, process):
+def test_get_version__fails__when__timeout(keywords, process):
     process(
         code=1,
         stdout=[
@@ -34,7 +34,7 @@ def test_get_version__fails_when_timeout(keywords, process):
         keywords.get_version("localhost", 7001)
 
 
-def test_get_version__fails_when_output_is_bad(keywords, process):
+def test_get_version__fails__when__output_is_bad(keywords, process):
     process(
         stdout=[
             "Trying 127.0.0.1 (port 7001):",

@@ -23,18 +23,18 @@ def test_get_var__returns_default_values(variables):
     assert get_var("VOS") == "vos"
 
 
-def test_get_var__returns_custom_value_when_set(variables):
+def test_get_var__returns_custom_value__when__set(variables):
     value = "/my/custom/path/to/vos"
     variables["VOS"] = value
     assert get_var("VOS") == value
 
 
-def test_get_var__raises_exception_when_variable_name_is_unknown(variables):
+def test_get_var__raises_exception__when__variable_name_is_unknown(variables):
     with pytest.raises(VariableMissing):
         get_var("__TEST_NAME__")
 
 
-def test_get_var__raises_exception_when_variable_value_is_empty(variables):
+def test_get_var__raises_exception__when__variable_value_is_empty(variables):
     variables["__TEST_NAME__"] = ""
     with pytest.raises(VariableEmpty):
         get_var("__TEST_NAME__")
@@ -52,12 +52,12 @@ def test_get_bool__returns_false(variables, value):
     assert get_bool("__TEST_NAME__") is False
 
 
-def test_get_bool__raises_exception_when_variable_is_unknown(variables):
+def test_get_bool__raises_exception__when__variable_is_unknown(variables):
     with pytest.raises(VariableMissing):
         get_bool("__TEST_NAME__")
 
 
-def test_get_bool__raises_exception_when_variable_value_is_empty(variables):
+def test_get_bool__raises_exception__when__variable_value_is_empty(variables):
     variables["__TEST_NAME__"] = ""
     with pytest.raises(VariableEmpty):
         get_bool("__TEST_NAME__")

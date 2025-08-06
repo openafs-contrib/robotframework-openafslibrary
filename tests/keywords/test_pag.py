@@ -29,7 +29,7 @@ def test__get_pag_from_one_group__succeeds(gids, expected):
     assert pag is expected
 
 
-def test__get_pag_from_one_group__raises_assertion_error_when_too_many_pags():
+def test__get_pag_from_one_group__raises_assertion_error__when__too_many_pags():
     gids = [4, 24, 27, 30, 46, 120, 131, 139, 1001, 1098354308, 1098354309]
     with pytest.raises(AssertionError) as e:
         _get_pag_from_one_group(gids)
@@ -69,7 +69,7 @@ def test_pag_from_groups__succeeds(keywords, gids, expected):
         ([4, 24, 27, 30, 46, 120, 131, 139, 1001, 1098354308], "1098354308"),
     ],
 )
-def test_pag_from_groups__succeeds_when_getting_current_groups(
+def test_pag_from_groups__succeeds__when__getting_current_groups(
     keywords, monkeypatch, gids, expected
 ):
     mock_getgroups = Mock(return_value=gids)
@@ -81,7 +81,7 @@ def test_pag_from_groups__succeeds_when_getting_current_groups(
 @pytest.mark.skipif(
     sys.platform == "win32", reason="This test is not applicable on Windows."
 )
-def test_pag_should_exist__succeeds_when_pag_is_present(keywords, monkeypatch):
+def test_pag_should_exist__succeeds__when__pag_is_present(keywords, monkeypatch):
     gids = [4, 131, 139, 1001, 1098354308]
     mock_getgroups = Mock(return_value=gids)
     monkeypatch.setattr(OpenAFSLibrary.keywords.pag.os, "getgroups", mock_getgroups)
@@ -91,7 +91,7 @@ def test_pag_should_exist__succeeds_when_pag_is_present(keywords, monkeypatch):
 @pytest.mark.skipif(
     sys.platform == "win32", reason="This test is not applicable on Windows."
 )
-def test_pag_should_exist__fails_when_pag_is_missing(keywords, monkeypatch):
+def test_pag_should_exist__fails__when__pag_is_missing(keywords, monkeypatch):
     gids = [4, 131, 139, 1001]
     mock_getgroups = Mock(return_value=gids)
     monkeypatch.setattr(OpenAFSLibrary.keywords.pag.os, "getgroups", mock_getgroups)
@@ -103,7 +103,7 @@ def test_pag_should_exist__fails_when_pag_is_missing(keywords, monkeypatch):
 @pytest.mark.skipif(
     sys.platform == "win32", reason="This test is not applicable on Windows."
 )
-def test_pag_should_not_exist__succeeds_when_pag_is_missing(keywords, monkeypatch):
+def test_pag_should_not_exist__succeeds__when__pag_is_missing(keywords, monkeypatch):
     gids = [4, 131, 139, 1001]
     mock_getgroups = Mock(return_value=gids)
     monkeypatch.setattr(OpenAFSLibrary.keywords.pag.os, "getgroups", mock_getgroups)
@@ -113,7 +113,7 @@ def test_pag_should_not_exist__succeeds_when_pag_is_missing(keywords, monkeypatc
 @pytest.mark.skipif(
     sys.platform == "win32", reason="This test is not applicable on Windows."
 )
-def test_pag_should_not_exist__fails_when_pag_is_present(keywords, monkeypatch):
+def test_pag_should_not_exist__fails__when__pag_is_present(keywords, monkeypatch):
     gids = [4, 131, 139, 1001, 1098354308]
     mock_getgroups = Mock(return_value=gids)
     monkeypatch.setattr(OpenAFSLibrary.keywords.pag.os, "getgroups", mock_getgroups)

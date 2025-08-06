@@ -30,12 +30,12 @@ def test_run_program__runs_hello_world(python, logged):
     assert logged.info[0] == f"running: {python} -c print('hello world')"
 
 
-def test_run_program__rc_is_1_when_program_exits_with_1(python, logged):
+def test_run_program__rc_is_1__when__program_exits_with_1(python, logged):
     rc, out, err = run_program([python, "-c", "import sys; sys.exit(1)"])
     assert rc == 1
 
 
-def test_run_program__raises_file_not_found_when_program_is_missing(logged, tmp_path):
+def test_run_program__raises_file_not_found__when__program_is_missing(logged, tmp_path):
     missing_path = tmp_path / "missing"
     with pytest.raises(FileNotFoundError):
         rc, out, err = run_program([missing_path])
@@ -44,7 +44,7 @@ def test_run_program__raises_file_not_found_when_program_is_missing(logged, tmp_
 @pytest.mark.skipif(
     sys.platform == "win32", reason="This test is not applicable on Windows."
 )
-def test_run_program__raises_permission_error_when_file_is_not_executable(
+def test_run_program__raises_permission_error__when__file_is_not_executable(
     python, logged, tmp_path
 ):
     script_path = tmp_path / "no-exec.sh"
@@ -70,21 +70,21 @@ def test_run_vos__runs_vos(process):
     assert proc.args == ["vos", "help"]
 
 
-def test_run_vos__raises_command_failed_when_subcommand_is_invalid(process):
+def test_run_vos__raises_command_failed__when__subcommand_is_invalid(process):
     proc = process(code=255, stdout=["vos: Unrecognized operation"])
     with pytest.raises(CommandFailed):
         vos("bogus")
     assert proc.args == ["vos", "bogus"]
 
 
-def test_run_vos__raises_no_such_entry_error_when_vldb_error_is_seen(process):
+def test_run_vos__raises_no_such_entry_error__when__vldb_error_is_seen(process):
     proc = process(code=255, stderr=["error", "VLDB: no such entry"])
     with pytest.raises(NoSuchEntryError):
         vos("examine")
     assert proc.args == ["vos", "examine"]
 
 
-def test_run_vos__raises_no_such_entry_error_when_does_not_exists_error_seen(process):
+def test_run_vos__raises_no_such_entry_error__when__does_not_exists_error_seen(process):
     proc = process(code=255, stderr=["error", "does not exist"])
     with pytest.raises(NoSuchEntryError):
         vos("examine")
@@ -107,7 +107,7 @@ def test_run_fs__runs_fs_command(process):
     assert proc.args == ["fs", "help"]
 
 
-def test_run_fs__runs_command_in_path_when_fs_variable_is_set(process, variables):
+def test_run_fs__runs_command_in_path__when__fs_variable_is_set(process, variables):
     usage = "fs: Commands are: ..."
     proc = process(stdout=[usage])
     variables["FS"] = "/my/custom/path/fs"

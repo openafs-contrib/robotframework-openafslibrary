@@ -38,7 +38,7 @@ def test_normalize__returns_expected(value, expected):
 
 
 @pytest.mark.parametrize("invalid", list("bcmxyzXZY123.,-+=!?@/(){}"))
-def test_normalize__raises_assertion_error_when_input_is_invalid(invalid):
+def test_normalize__raises_assertion_error__when__input_is_invalid(invalid):
     with pytest.raises(AssertionError) as e:
         normalize([invalid])
     assert "Illegal rights character" in str(e)
@@ -80,7 +80,7 @@ def test_parse__returns_expected(value, sign, rights):
         list("+++"),
     ],
 )
-def test_parse__raises_assertion_error_when_input_is_invalid(value):
+def test_parse__raises_assertion_error__when__input_is_invalid(value):
     with pytest.raises(AssertionError) as e:
         parse(value)
     assert "Illegal rights character" in str(e)
@@ -173,7 +173,7 @@ def test_add_access_rights__runs_fs_setacl(keywords, process, rights):
     assert proc.args == ["fs", "setacl", "-dir", "/a/b/c", "-acl", "myuser", rights]
 
 
-def test_access_control_list_matches__succeeds_when_acls_match(
+def test_access_control_list_matches__succeeds__when__acls_match(
     keywords, process, tmp_path
 ):
     acls = "user rlidwk"
@@ -187,7 +187,7 @@ def test_access_control_list_matches__succeeds_when_acls_match(
     keywords.access_control_list_matches(tmp_path, acls)
 
 
-def test_access_control_list_matches__fails_when_acls_do_not_mactch(
+def test_access_control_list_matches__fails__when__acls_do_not_mactch(
     keywords, process, tmp_path
 ):
     acls = "user rlidwk"
@@ -203,7 +203,7 @@ def test_access_control_list_matches__fails_when_acls_do_not_mactch(
     assert "ACLs do not match" in str(e)
 
 
-def test_access_control_list_contains__succeeds_when_list_contains_acls(
+def test_access_control_list_contains__succeeds__when__list_contains_acls(
     keywords, process, tmp_path
 ):
     process(
@@ -218,7 +218,7 @@ def test_access_control_list_contains__succeeds_when_list_contains_acls(
     keywords.access_control_list_contains(tmp_path, name, rights)
 
 
-def test_access_control_list_contains__fails_when_list_does_not_contain_acls(
+def test_access_control_list_contains__fails__when__list_does_not_contain_acls(
     keywords, process, tmp_path
 ):
     process(
@@ -235,7 +235,7 @@ def test_access_control_list_contains__fails_when_list_does_not_contain_acls(
     assert "ACL entry rights do not match" in str(e)
 
 
-def test_access_control_should_exist__succeeds_when_acls_are_present(
+def test_access_control_should_exist__succeeds__when__acls_are_present(
     keywords, process, tmp_path
 ):
     process(
@@ -249,7 +249,7 @@ def test_access_control_should_exist__succeeds_when_acls_are_present(
     keywords.access_control_should_exist(tmp_path, name)
 
 
-def test_access_control_should_exist__fails_when_acls_not_present(
+def test_access_control_should_exist__fails__when__acls_not_present(
     keywords, process, tmp_path
 ):
     process(
@@ -265,7 +265,7 @@ def test_access_control_should_exist__fails_when_acls_not_present(
     assert "ACL entry does not exist" in str(e)
 
 
-def test_access_control_should_not_exist__succeeds_when_acls_not_present(
+def test_access_control_should_not_exist__succeeds__when__acls_not_present(
     keywords, process, tmp_path
 ):
     process(
@@ -281,7 +281,7 @@ def test_access_control_should_not_exist__succeeds_when_acls_not_present(
     assert "ACL entry does not exist" in str(e)
 
 
-def test_access_control_should_not_exist__fails_when_acls_are_present(
+def test_access_control_should_not_exist__fails__when__acls_are_present(
     keywords, process, tmp_path
 ):
     process(
