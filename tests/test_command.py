@@ -30,12 +30,12 @@ def test_run_program__runs_hello_world(python, logged):
     assert logged.info[0] == f"running: {python} -c print('hello world')"
 
 
-def test_run_program__rc_is_1__when__program_exits_with_1(python, logged):
+def test_run_program__rc_is_1__when__program_exits_with_1(python):
     rc, out, err = run_program([python, "-c", "import sys; sys.exit(1)"])
     assert rc == 1
 
 
-def test_run_program__raises_file_not_found__when__program_is_missing(logged, tmp_path):
+def test_run_program__raises_file_not_found__when__program_is_missing(tmp_path):
     missing_path = tmp_path / "missing"
     with pytest.raises(FileNotFoundError):
         rc, out, err = run_program([missing_path])
@@ -45,7 +45,7 @@ def test_run_program__raises_file_not_found__when__program_is_missing(logged, tm
     sys.platform == "win32", reason="This test is not applicable on Windows."
 )
 def test_run_program__raises_permission_error__when__file_is_not_executable(
-    python, logged, tmp_path
+    python, tmp_path
 ):
     script_path = tmp_path / "no-exec.sh"
     script_path.write_text("#!{python}\nimport sys\nsys.exit(0)\n")
