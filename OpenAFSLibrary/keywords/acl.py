@@ -187,7 +187,7 @@ class AccessControlList:
         return True
 
 
-class _ACLKeywords(object):
+class _ACLKeywords:
     """ACL testing keywords."""
 
     def add_access_rights(self, path, name, rights):
