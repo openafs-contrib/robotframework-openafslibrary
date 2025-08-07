@@ -21,18 +21,50 @@ def python():
     return sys.executable
 
 
-def test_run_program__runs_hello_world(python, logged):
+def test_run_program__returns_zero_exit_code__when__program_runs(python):
     rc, out, err = run_program([python, "-c", "print('hello world')"])
     assert rc == 0
-    assert out.strip() == "hello world"
-    assert err.strip() == ""
-    assert len(logged.info) == 1
-    assert logged.info[0] == f"running: {python} -c print('hello world')"
 
 
-def test_run_program__rc_is_1__when__program_exits_with_1(python):
+def test_run_program__returns_non_zero_exit_code__when__program_exits_with_code(python):
     rc, out, err = run_program([python, "-c", "import sys; sys.exit(1)"])
     assert rc == 1
+
+
+def test_run_program__returns_stdout__when__program_runs(python):
+    rc, out, err = run_program([python, "-c", "print('hello world')"])
+    assert out == "hello world\n"
+
+
+def test_run_program__returns_stderr__when__program_runs(python):
+    rc, out, err = run_program(
+        [python, "-c", "import sys; print('oops', file=sys.stderr)"]
+    )
+    assert err == "oops\n"
+
+
+def test_run_program__logs_command_line__when__program_runs(python, logged):
+    rc, out, err = run_program([python, "--version"])
+    assert len(logged.info) > 0
+    assert f"running: {python} --version" in logged.info
+
+
+def test_run_program__logs_code__when__program_runs(python, logged):
+    rc, out, err = run_program([python, "-c", "print('hello world')"])
+    assert len(logged.info) > 0
+    assert "code: 0" in logged.info
+
+
+def test_run_program__logs_stdout__when__program_runs(python, logged):
+    rc, out, err = run_program([python, "-c", "print('hello world')"])
+    assert len(logged.info) > 0
+    assert "stdout: hello world\n" in logged.info
+
+
+def test_run_program__logs_stderr__when__program_runs(python, logged):
+    rc, out, err = run_program([python, "-c", "import sys; sys.stderr.write('oops')"])
+    assert len(logged.info) > 0
+    assert "stderr: oops" in logged.info
 
 
 def test_run_program__raises_file_not_found__when__program_is_missing(tmp_path):
