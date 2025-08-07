@@ -17,7 +17,7 @@ setuptools.setup(
         'OpenAFSLibrary.keywords',
     ],
     install_requires=[
-        'robotframework>=2.7.0',
+        'robotframework>=6.1.1',
     ],
     zip_safe=False,
     classifiers=[
