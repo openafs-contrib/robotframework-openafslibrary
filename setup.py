@@ -11,7 +11,7 @@ setuptools.setup(
     author='Michael Meffie',
     author_email='mmeffie@sinenomine.net',
     url='https://github.com/openafs-contrib/robotframework-openafslibrary',
-    license='BSD',
+    license='BSD-2-Clause',
     packages=[
         'OpenAFSLibrary',
         'OpenAFSLibrary.keywords',
@@ -24,7 +24,6 @@ setuptools.setup(
         'Development Status :: 4 - Beta',
         'Environment :: Console',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: BSD License',
         'Operating System :: POSIX',
         'Programming Language :: Python :: 3',
         'Topic :: Software Development',
