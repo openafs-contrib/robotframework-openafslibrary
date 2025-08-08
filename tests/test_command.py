@@ -26,8 +26,10 @@ def test_run_program__runs_hello_world(python, logged):
     assert rc == 0
     assert out.strip() == "hello world"
     assert err.strip() == ""
-    assert len(logged.info) == 1
-    assert logged.info[0] == f"running: {python} -c print('hello world')"
+    assert f"running: {python} -c print('hello world')" in logged.info
+    assert "code: 0" in logged.debug
+    assert "output: hello world\n" in logged.debug
+    assert "error: " in logged.debug
 
 
 def test_run_program__rc_is_1__when__program_exits_with_1(python):

@@ -53,11 +53,11 @@ def run_program(args):
         args, shell=shell, bufsize=-1, stdout=subprocess.PIPE, stderr=subprocess.PIPE
     )
     stdout, stderr = proc.communicate()
-    if proc.returncode:
-        logger.info("output: %s" % (stdout,))
-        logger.info("error: %s" % (stderr,))
     output = stdout.decode("utf-8")
     error = stderr.decode("utf-8")
+    logger.debug(f"code: {proc.returncode}")
+    logger.debug(f"output: {output}")
+    logger.debug(f"error: {error}")
     return (proc.returncode, output, error)
 
 
