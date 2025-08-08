@@ -20,8 +20,8 @@
 #
 
 import os
-from robot.api import logger
 
+from OpenAFSLibrary import logger
 from OpenAFSLibrary.variable import get_var, get_bool
 from OpenAFSLibrary.command import run_program
 

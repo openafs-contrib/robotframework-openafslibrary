@@ -21,7 +21,8 @@
 
 import os
 import subprocess
-from robot.api import logger
+
+from OpenAFSLibrary import logger
 from OpenAFSLibrary.variable import get_var, get_bool
 
 

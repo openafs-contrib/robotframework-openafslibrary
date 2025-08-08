@@ -2,48 +2,42 @@
 # See LICENSE
 
 import pytest
-import io
 
 from unittest.mock import Mock
+import OpenAFSLibrary.logger
 import OpenAFSLibrary.command
 import OpenAFSLibrary.variable
-import OpenAFSLibrary.keywords.acl
-import OpenAFSLibrary.keywords.command
-import OpenAFSLibrary.keywords.login
-import OpenAFSLibrary.keywords.pag
-import OpenAFSLibrary.keywords.path
-import OpenAFSLibrary.keywords.volume
 
 
 @pytest.fixture
 def logged(monkeypatch):
     captured = Mock()
+    captured.trace = []
     captured.debug = []
     captured.info = []
+    captured.warn = []
+    captured.error = []
 
-    def sprint(*args):
-        with io.StringIO() as out:
-            print(*args, file=out, end="")
-            return out.getvalue()
+    def capture_trace(msg, html=False):
+        captured.trace.append(msg)
 
-    def capture_debug(*args):
-        captured.debug.append(sprint(*args))
+    def capture_debug(msg, html=False):
+        captured.debug.append(msg)
 
-    def capture_info(*args):
-        captured.info.append(sprint(*args))
+    def capture_info(msg, html=False, also_console=False):
+        captured.info.append(msg)
 
-    for module in [
-        OpenAFSLibrary.command,
-        OpenAFSLibrary.keywords.acl,
-        OpenAFSLibrary.keywords.command,
-        OpenAFSLibrary.keywords.login,
-        OpenAFSLibrary.keywords.pag,
-        OpenAFSLibrary.keywords.path,
-        OpenAFSLibrary.keywords.volume,
-    ]:
-        monkeypatch.setattr(module.logger, "debug", capture_debug)
-        monkeypatch.setattr(module.logger, "info", capture_info)
+    def capture_warn(msg, html=False):
+        captured.warn.append(msg)
 
+    def capture_error(msg, html=False):
+        captured.error.append(msg)
+
+    monkeypatch.setattr(OpenAFSLibrary.logger, "trace", capture_trace)
+    monkeypatch.setattr(OpenAFSLibrary.logger, "debug", capture_debug)
+    monkeypatch.setattr(OpenAFSLibrary.logger, "info", capture_info)
+    monkeypatch.setattr(OpenAFSLibrary.logger, "warn", capture_warn)
+    monkeypatch.setattr(OpenAFSLibrary.logger, "error", capture_error)
     return captured
 
 
