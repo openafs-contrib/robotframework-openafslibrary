@@ -23,7 +23,7 @@ import os
 import socket
 import re
 
-from robot.api import logger
+from OpenAFSLibrary import logger
 from OpenAFSLibrary.command import vos, fs, NoSuchEntryError
 
 

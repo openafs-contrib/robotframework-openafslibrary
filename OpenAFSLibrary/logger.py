@@ -1,4 +1,4 @@
-# Copyright (c) 2014-2015, Sine Nomine Associates
+# Copyright (c) 2014-2025 Sine Nomine Associates
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -17,28 +17,32 @@
 # WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-#
-
-from OpenAFSLibrary import logger
-from OpenAFSLibrary.command import run_program
 
 
-class _CommandKeywords:
-    def command_should_succeed(self, cmd, msg=None):
-        """Fails if command does not exit with a zero status code."""
-        rc, out, err = run_program(cmd)
-        logger.info("Output: " + out)
-        logger.info("Error: " + err)
-        if rc != 0:
-            if not msg:
-                msg = "Command Failed! %s" % cmd
-            raise AssertionError(msg)
+import os
+import datetime
+import robot.api.logger
 
-    def command_should_fail(self, cmd):
-        """Fails if command exits with a zero status code."""
-        rc, out, err = run_program(cmd)
-        logger.info("Output: " + out)
-        logger.info("Error: " + err)
-        logger.info("Code: %d" % rc)
-        if rc == 0:
-            raise AssertionError("Command should have failed: %s" % cmd)
+
+def _is_robot_api_logger_enabled():
+    logging = os.getenv("ROBOT_API_LOGGER", "no").lower()
+    return logging in ["true", "yes", "1", "enable", "enabled"]
+
+
+def _write(msg, **kargs):
+    now = datetime.datetime.now().strftime("%H:%M:%S")
+    print(f"{now} {msg}")
+
+
+if _is_robot_api_logger_enabled():
+    trace = robot.api.logger.trace
+    debug = robot.api.logger.debug
+    info = robot.api.logger.info
+    warn = robot.api.logger.warn
+    error = robot.api.logger.error
+else:
+    trace = _write
+    debug = _write
+    info = _write
+    warn = _write
+    error = _write

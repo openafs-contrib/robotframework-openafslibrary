@@ -21,8 +21,9 @@
 
 import os
 import random
-from robot.api import logger
 import errno
+
+from OpenAFSLibrary import logger
 
 
 def _convert_errno_parm(code_should_be):

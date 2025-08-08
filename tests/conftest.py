@@ -4,14 +4,9 @@
 import pytest
 
 from unittest.mock import Mock
+import OpenAFSLibrary.logger
 import OpenAFSLibrary.command
 import OpenAFSLibrary.variable
-import OpenAFSLibrary.keywords.acl
-import OpenAFSLibrary.keywords.command
-import OpenAFSLibrary.keywords.login
-import OpenAFSLibrary.keywords.pag
-import OpenAFSLibrary.keywords.path
-import OpenAFSLibrary.keywords.volume
 
 
 @pytest.fixture
@@ -38,21 +33,11 @@ def logged(monkeypatch):
     def capture_error(msg, html=False):
         captured.error.append(msg)
 
-    for module in [
-        OpenAFSLibrary.command,
-        OpenAFSLibrary.keywords.acl,
-        OpenAFSLibrary.keywords.command,
-        OpenAFSLibrary.keywords.login,
-        OpenAFSLibrary.keywords.pag,
-        OpenAFSLibrary.keywords.path,
-        OpenAFSLibrary.keywords.volume,
-    ]:
-        monkeypatch.setattr(module.logger, "trace", capture_trace)
-        monkeypatch.setattr(module.logger, "debug", capture_debug)
-        monkeypatch.setattr(module.logger, "info", capture_info)
-        monkeypatch.setattr(module.logger, "warn", capture_warn)
-        monkeypatch.setattr(module.logger, "error", capture_error)
-
+    monkeypatch.setattr(OpenAFSLibrary.logger, "trace", capture_trace)
+    monkeypatch.setattr(OpenAFSLibrary.logger, "debug", capture_debug)
+    monkeypatch.setattr(OpenAFSLibrary.logger, "info", capture_info)
+    monkeypatch.setattr(OpenAFSLibrary.logger, "warn", capture_warn)
+    monkeypatch.setattr(OpenAFSLibrary.logger, "error", capture_error)
     return captured
 
 
